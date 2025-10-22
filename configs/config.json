@@ -1,0 +1,52 @@
+{
+  "exchange": {
+    "name": "RTES",
+    "tcp_port": 8888,
+    "udp_multicast_group": "239.0.0.1",
+    "udp_port": 9999,
+    "metrics_port": 8080
+  },
+  "symbols": [
+    {
+      "symbol": "AAPL",
+      "tick_size": 0.01,
+      "lot_size": 1,
+      "price_collar_pct": 10.0
+    },
+    {
+      "symbol": "MSFT", 
+      "tick_size": 0.01,
+      "lot_size": 1,
+      "price_collar_pct": 10.0
+    },
+    {
+      "symbol": "GOOGL",
+      "tick_size": 0.01,
+      "lot_size": 1,
+      "price_collar_pct": 10.0
+    }
+  ],
+  "risk": {
+    "max_order_size": 10000,
+    "max_notional_per_client": 1000000.0,
+    "max_orders_per_second": 1000,
+    "price_collar_enabled": true
+  },
+  "performance": {
+    "order_pool_size": 1000000,
+    "queue_capacity": 65536,
+    "enable_cpu_pinning": false,
+    "tcp_nodelay": true,
+    "udp_buffer_size": 262144
+  },
+  "logging": {
+    "level": "INFO",
+    "rate_limit_ms": 1000,
+    "enable_structured": true
+  },
+  "persistence": {
+    "enable_event_log": false,
+    "snapshot_interval_ms": 60000,
+    "log_directory": "./logs"
+  }
+}
