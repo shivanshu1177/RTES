@@ -2,7 +2,6 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <cstdarg>
 
 namespace rtes {
 
@@ -30,20 +29,7 @@ void Logger::log(LogLevel level, const std::string& message) {
     std::cout << format_message(level, message) << std::endl;
 }
 
-void Logger::log(LogLevel level, const char* format, ...) {
-    if (level < level_.load()) return;
-    if (should_rate_limit()) return;
-    
-    va_list args;
-    va_start(args, format);
-    
-    char buffer[1024];
-    vsnprintf(buffer, sizeof(buffer), format, args);
-    
-    va_end(args);
-    
-    std::cout << format_message(level, std::string(buffer)) << std::endl;
-}
+// Removed unsafe printf-style logging - use log_safe() template methods instead
 
 std::string Logger::format_message(LogLevel level, const std::string& message) {
     auto now = std::chrono::system_clock::now();

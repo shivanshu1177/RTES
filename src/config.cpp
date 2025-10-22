@@ -1,8 +1,11 @@
 #include "rtes/config.hpp"
 #include "rtes/logger.hpp"
+#include "rtes/security_utils.hpp"
+#include "rtes/input_validation.hpp"
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <filesystem>
 
 namespace rtes {
 
@@ -101,18 +104,47 @@ private:
 };
 
 std::unique_ptr<Config> Config::load_from_file(const std::string& path) {
-    std::ifstream file(path);
+    // Validate file path to prevent path traversal attacks
+    std::string base_dir = std::filesystem::current_path() / "configs";
+    if (!SecurityUtils::validate_file_path(path, base_dir)) {
+        throw std::runtime_error("Invalid config file path: " + SecurityUtils::sanitize_log_input(path));
+    }
+    
+    // Normalize path
+    std::string normalized_path = SecurityUtils::normalize_path(path);
+    if (normalized_path.empty()) {
+        throw std::runtime_error("Cannot normalize config file path");
+    }
+    
+    std::ifstream file(normalized_path);
     if (!file.is_open()) {
-        throw std::runtime_error("Cannot open config file: " + path);
+        throw std::runtime_error("Cannot open config file: " + SecurityUtils::sanitize_log_input(normalized_path));
     }
     
     std::stringstream buffer;
     buffer << file.rdbuf();
     
     try {
-        return JsonParser::parse(buffer.str());
+        auto config = JsonParser::parse(buffer.str());
+        
+        // Comprehensive configuration validation
+        auto validation_result = ConfigurationValidator::validate_full_config(*config);
+        if (validation_result.has_error()) {
+            throw std::runtime_error("Configuration validation failed: " + 
+                                   validation_result.error().message());
+        }
+        
+        // Validate extracted paths
+        if (!config->persistence.log_directory.empty()) {
+            if (!SecurityUtils::validate_file_path(config->persistence.log_directory, "/var/log/rtes")) {
+                throw std::runtime_error("Invalid log directory path in config");
+            }
+        }
+        
+        LOG_INFO("Configuration validation passed");
+        return config;
     } catch (const std::exception& e) {
-        throw std::runtime_error("Failed to parse config: " + std::string(e.what()));
+        throw std::runtime_error("Failed to parse config: " + SecurityUtils::sanitize_log_input(e.what()));
     }
 }
 

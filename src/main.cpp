@@ -1,8 +1,13 @@
+#include "rtes/exchange.hpp"
+#include "rtes/tcp_gateway.hpp"
+#include "rtes/udp_publisher.hpp"
+#include "rtes/monitoring.hpp"
 #include "rtes/config.hpp"
 #include "rtes/logger.hpp"
 #include <iostream>
 #include <csignal>
 #include <atomic>
+#include <thread>
 
 namespace rtes {
 
@@ -13,30 +18,43 @@ void signal_handler(int signal) {
     shutdown_requested.store(true);
 }
 
-class Exchange {
-public:
-    explicit Exchange(std::unique_ptr<Config> config) 
-        : config_(std::move(config)) {
-        LOG_INFO("Initializing RTES Exchange: " + config_->exchange.name);
+void run_exchange(std::unique_ptr<Config> config_ptr) {
+    // Keep config reference for components
+    const Config& config = *config_ptr;
+    
+    // Create and start exchange
+    Exchange exchange(std::move(config_ptr));
+    exchange.start();
+    
+    // Create and start TCP gateway
+    TcpGateway gateway(config.exchange.tcp_port, exchange.get_risk_manager(), 
+                      exchange.get_order_pool());
+    gateway.start();
+    
+    // Create and start UDP publisher
+    UdpPublisher udp_publisher(config.exchange.udp_multicast_group, 
+                              config.exchange.udp_port,
+                              exchange.get_market_data_queue());
+    udp_publisher.start();
+    
+    // Create and start monitoring service
+    MonitoringService monitoring(config.exchange.metrics_port, &exchange);
+    monitoring.start();
+    
+    LOG_INFO("All services started successfully");
+    
+    // Main event loop
+    while (!shutdown_requested.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     
-    void run() {
-        LOG_INFO("Starting exchange on TCP port " + std::to_string(config_->exchange.tcp_port));
-        LOG_INFO("Market data multicast: " + config_->exchange.udp_multicast_group + 
-                 ":" + std::to_string(config_->exchange.udp_port));
-        LOG_INFO("Metrics endpoint: http://localhost:" + std::to_string(config_->exchange.metrics_port));
-        
-        // Main event loop
-        while (!shutdown_requested.load()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        
-        LOG_INFO("Exchange shutdown complete");
-    }
-
-private:
-    std::unique_ptr<Config> config_;
-};
+    // Graceful shutdown
+    monitoring.stop();
+    udp_publisher.stop();
+    gateway.stop();
+    exchange.stop();
+    LOG_INFO("Exchange shutdown complete");
+}
 
 } // namespace rtes
 
@@ -64,9 +82,8 @@ int main(int argc, char* argv[]) {
         logger.set_rate_limit(std::chrono::milliseconds(config->logging.rate_limit_ms));
         logger.enable_structured(config->logging.enable_structured);
         
-        // Create and run exchange
-        rtes::Exchange exchange(std::move(config));
-        exchange.run();
+        // Run exchange
+        rtes::run_exchange(std::move(config));
         
     } catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;

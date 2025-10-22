@@ -1,0 +1,62 @@
+{
+  "environment": "production",
+  "exchange": {
+    "name": "RTES-PROD",
+    "tcp_port": 8888,
+    "udp_port": 9999,
+    "metrics_port": 8080,
+    "udp_multicast_group": "239.0.0.1"
+  },
+  "risk": {
+    "max_order_size": 10000000,
+    "max_notional_per_client": 100000000.0,
+    "max_orders_per_second": 100000,
+    "enable_risk_checks": true
+  },
+  "performance": {
+    "order_pool_size": 10000000,
+    "queue_capacity": 1000000,
+    "udp_buffer_size": 1048576,
+    "enable_performance_monitoring": true
+  },
+  "security": {
+    "enable_tls": true,
+    "enable_authentication": true,
+    "log_level": "INFO",
+    "enable_audit_logging": true,
+    "encryption_key_id": "prod_key_2024"
+  },
+  "symbols": [
+    {
+      "name": "AAPL",
+      "tick_size": 0.01,
+      "lot_size": 1
+    },
+    {
+      "name": "GOOGL",
+      "tick_size": 0.01,
+      "lot_size": 1
+    },
+    {
+      "name": "MSFT",
+      "tick_size": 0.01,
+      "lot_size": 1
+    },
+    {
+      "name": "TSLA",
+      "tick_size": 0.01,
+      "lot_size": 1
+    }
+  ],
+  "feature_flags": {
+    "enable_new_matching_engine": true,
+    "enable_enhanced_risk_checks": true,
+    "enable_market_data_compression": true
+  },
+  "deployment": {
+    "health_check_timeout": 60,
+    "traffic_ramp_duration": 600,
+    "enable_canary_deployment": true,
+    "rollback_on_error_rate": 0.05
+  }
+}

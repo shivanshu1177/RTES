@@ -47,6 +47,15 @@ curl -s localhost:8080/metrics | head
 └── .github/workflows/ # CI/CD
 ```
 
+## Security Features
+- **Input Sanitization**: All user inputs validated and sanitized
+- **Authentication**: Role-based access control with token validation
+- **Authorization**: Operation-level permission checks
+- **Secure Logging**: Log injection prevention with type-safe formatting
+- **Path Validation**: Protection against path traversal attacks
+
+See [SECURITY.md](docs/SECURITY.md) for detailed security implementation.
+
 ## Requirements
 - C++20/23 compiler (GCC 11+, Clang 13+)
 - CMake 3.20+

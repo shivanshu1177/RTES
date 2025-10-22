@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  rtes-exchange:
+    build: .
+    container_name: rtes-exchange
+    ports:
+      - "8888:8888"    # TCP Order Entry
+      - "8080:8080"    # HTTP Metrics
+      - "9999:9999/udp" # UDP Market Data
+    volumes:
+      - ./configs:/opt/rtes/etc/rtes:ro
+      - ./logs:/var/log/rtes
+    environment:
+      - RTES_LOG_LEVEL=INFO
+    networks:
+      - rtes-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  rtes-client-mm:
+    build: .
+    container_name: rtes-client-mm
+    command: ["client_simulator", "--strategy", "market_maker", "--symbol", "AAPL", "--host", "rtes-exchange", "--duration", "3600"]
+    depends_on:
+      rtes-exchange:
+        condition: service_healthy
+    networks:
+      - rtes-network
+    restart: unless-stopped
+
+  rtes-client-taker:
+    build: .
+    container_name: rtes-client-taker
+    command: ["client_simulator", "--strategy", "liquidity_taker", "--symbol", "MSFT", "--host", "rtes-exchange", "--duration", "3600"]
+    depends_on:
+      rtes-exchange:
+        condition: service_healthy
+    networks:
+      - rtes-network
+    restart: unless-stopped
+
+  rtes-load-test:
+    build: .
+    container_name: rtes-load-test
+    command: ["load_generator", "--host", "rtes-exchange", "--clients", "10", "--duration", "300"]
+    depends_on:
+      rtes-exchange:
+        condition: service_healthy
+    networks:
+      - rtes-network
+    profiles:
+      - load-test
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: rtes-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    networks:
+      - rtes-network
+    profiles:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: rtes-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./docker/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+    networks:
+      - rtes-network
+    profiles:
+      - monitoring
+
+networks:
+  rtes-network:
+    driver: bridge
+
+volumes:
+  grafana-storage:

@@ -30,9 +30,27 @@ target_link_libraries(trading_exchange rtes_core)
 add_executable(client_simulator tools/client_simulator.cpp)
 target_link_libraries(client_simulator rtes_core)
 
-# Benchmark executable
+# Benchmark executables
 add_executable(bench_exchange tools/bench_exchange.cpp)
 target_link_libraries(bench_exchange rtes_core)
+
+add_executable(bench_memory_pool tools/bench_memory_pool.cpp)
+target_link_libraries(bench_memory_pool rtes_core)
+
+add_executable(bench_matching tools/bench_matching.cpp)
+target_link_libraries(bench_matching rtes_core)
+
+add_executable(tcp_client tools/tcp_client.cpp)
+target_link_libraries(tcp_client rtes_core)
+
+add_executable(udp_receiver tools/udp_receiver.cpp)
+target_link_libraries(udp_receiver rtes_core)
+
+add_executable(load_generator tools/load_generator.cpp)
+target_link_libraries(load_generator rtes_core)
+
+add_executable(perf_harness tools/perf_harness.cpp)
+target_link_libraries(perf_harness rtes_core)
 
 # Enable testing
 enable_testing()
@@ -47,6 +65,6 @@ if(GTest_FOUND)
 endif()
 
 # Install targets
-install(TARGETS trading_exchange client_simulator bench_exchange
+install(TARGETS trading_exchange client_simulator bench_exchange bench_memory_pool bench_matching tcp_client udp_receiver load_generator perf_harness
         RUNTIME DESTINATION bin)
 install(DIRECTORY configs/ DESTINATION etc/rtes/)
