@@ -1,3 +1,21 @@
+/**
+ * @file security_utils.cpp
+ * @brief Security utilities for input validation and authorization
+ * 
+ * Provides:
+ * - Log injection prevention (CWE-117)
+ * - Path traversal protection (CWE-22/23/24)
+ * - Input sanitization
+ * - Authentication and authorization
+ * - Symbol and order ID validation
+ * 
+ * Security principles:
+ * - Fail-safe defaults (deny by default)
+ * - Input validation (whitelist approach)
+ * - Output encoding (escape special chars)
+ * - Least privilege (role-based access)
+ */
+
 #include "rtes/security_utils.hpp"
 #include <algorithm>
 #include <cctype>
@@ -5,12 +23,14 @@
 
 namespace rtes {
 
+// Allowed configuration directories (whitelist)
 const std::unordered_set<std::string> SecurityUtils::ALLOWED_CONFIG_DIRS = {
     "/etc/rtes",
     "./configs",
     "../configs"
 };
 
+// Control characters to filter (security: prevent injection)
 const std::unordered_set<char> SecurityUtils::CONTROL_CHARS = {
     '\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07',
     '\x08', '\x0B', '\x0C', '\x0E', '\x0F', '\x10', '\x11', '\x12',
@@ -18,21 +38,38 @@ const std::unordered_set<char> SecurityUtils::CONTROL_CHARS = {
     '\x1B', '\x1C', '\x1D', '\x1E', '\x1F', '\x7F'
 };
 
+/**
+ * @brief Sanitize input for logging (prevent log injection)
+ * @param input Raw input string
+ * @return Sanitized string safe for logging
+ * 
+ * Security (CWE-117 - Log Injection):
+ * - Removes control characters
+ * - Escapes newlines, carriage returns, tabs
+ * - Escapes backslashes and quotes
+ * 
+ * Prevents attackers from:
+ * - Injecting fake log entries
+ * - Breaking log parsers
+ * - Hiding malicious activity
+ */
 std::string SecurityUtils::sanitize_log_input(std::string_view input) {
     std::string sanitized;
-    sanitized.reserve(input.size() * 2);
+    sanitized.reserve(input.size() * 2);  // Reserve space for escaping
     
     for (char c : input) {
+        // Remove control characters (security)
         if (CONTROL_CHARS.contains(c)) {
-            continue; // Remove control characters
+            continue;
         }
         
+        // Escape special characters
         switch (c) {
-            case '\n': sanitized += "\\n"; break;
-            case '\r': sanitized += "\\r"; break;
-            case '\t': sanitized += "\\t"; break;
-            case '\\': sanitized += "\\\\"; break;
-            case '"':  sanitized += "\\\""; break;
+            case '\n': sanitized += "\\n"; break;   // Escape newline
+            case '\r': sanitized += "\\r"; break;   // Escape carriage return
+            case '\t': sanitized += "\\t"; break;   // Escape tab
+            case '\\': sanitized += "\\\\"; break; // Escape backslash
+            case '"':  sanitized += "\\\""; break; // Escape quote
             default:   sanitized += c; break;
         }
     }
@@ -40,32 +77,48 @@ std::string SecurityUtils::sanitize_log_input(std::string_view input) {
     return sanitized;
 }
 
+/**
+ * @brief Validate file path (prevent path traversal)
+ * @param path File path to validate
+ * @param base_dir Base directory (must be within this)
+ * @return true if path is safe
+ * 
+ * Security (CWE-22/23/24 - Path Traversal):
+ * - Resolves to canonical paths (removes "..", symlinks)
+ * - Checks if file within base directory
+ * - Validates against whitelist of allowed directories
+ * 
+ * Prevents attackers from:
+ * - Reading arbitrary files (../../etc/passwd)
+ * - Writing to system directories
+ * - Following symlinks outside allowed paths
+ */
 bool SecurityUtils::validate_file_path(std::string_view path, std::string_view base_dir) {
     try {
         std::filesystem::path file_path(path);
         std::filesystem::path base_path(base_dir);
         
-        // Resolve to canonical paths
+        // Security: Resolve to canonical paths (removes "..", symlinks)
         auto canonical_file = std::filesystem::weakly_canonical(file_path);
         auto canonical_base = std::filesystem::canonical(base_path);
         
-        // Check if file is within base directory
+        // Security: Check if file is within base directory
         auto relative = std::filesystem::relative(canonical_file, canonical_base);
         if (relative.empty() || relative.string().starts_with("..")) {
-            return false;
+            return false;  // Path escapes base directory
         }
         
-        // Check against allowed directories
+        // Security: Check against whitelist of allowed directories
         std::string path_str = canonical_file.string();
         for (const auto& allowed : ALLOWED_CONFIG_DIRS) {
             if (path_str.starts_with(allowed)) {
-                return true;
+                return true;  // Path in allowed directory
             }
         }
         
-        return false;
+        return false;  // Path not in whitelist
     } catch (const std::filesystem::filesystem_error&) {
-        return false;
+        return false;  // Fail-safe: deny on error
     }
 }
 
@@ -108,16 +161,37 @@ bool SecurityUtils::is_authorized_for_operation(const AuthContext& ctx, const st
     return ctx.role != UserRole::VIEWER; // Viewers can only read
 }
 
+/**
+ * @brief Authenticate user from token
+ * @param token Authentication token
+ * @return AuthContext with user info and permissions
+ * 
+ * SECURITY WARNING: This is a MOCK implementation for development only!
+ * 
+ * For production, implement:
+ * 1. JWT signature validation using public key
+ * 2. Token expiration checking
+ * 3. Issuer and audience claim verification
+ * 4. User database lookup for permissions
+ * 5. Token revocation checking
+ * 6. Rate limiting on authentication attempts
+ * 
+ * Current implementation:
+ * - Validates token format (length, characters)
+ * - Requires RTES_AUTH_MODE=development
+ * - Uses prefix-based mock authentication
+ * - NOT SECURE - DO NOT USE IN PRODUCTION
+ */
 AuthContext SecurityUtils::authenticate_user(std::string_view token) {
     AuthContext ctx;
     
-    // Validate token format and length
+    // Validate token format and length (basic security)
     if (token.empty() || token.size() < 32 || token.size() > 512) {
         LOG_WARN("Invalid token length");
         return ctx; // Not authenticated
     }
     
-    // Validate token contains only safe characters
+    // Validate token contains only safe characters (prevent injection)
     if (!is_safe_string(token)) {
         LOG_WARN("Token contains invalid characters");
         return ctx;

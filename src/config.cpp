@@ -1,3 +1,22 @@
+/**
+ * @file config.cpp
+ * @brief Configuration loading and validation
+ * 
+ * Loads configuration from JSON file with:
+ * - Path traversal protection
+ * - Input validation
+ * - Schema validation
+ * - Value range checking
+ * 
+ * Configuration sections:
+ * - Exchange (ports, multicast group)
+ * - Risk (limits, collars)
+ * - Performance (pool sizes, buffers)
+ * - Logging (level, rate limits)
+ * - Persistence (event log, snapshots)
+ * - Symbols (trading instruments)
+ */
+
 #include "rtes/config.hpp"
 #include "rtes/logger.hpp"
 #include "rtes/security_utils.hpp"
@@ -9,7 +28,18 @@
 
 namespace rtes {
 
-// Simple JSON parser for config (minimal implementation)
+/**
+ * @brief Simple JSON parser for configuration
+ * 
+ * Minimal JSON parser for config files.
+ * For production, consider using nlohmann/json or rapidjson.
+ * 
+ * Supports:
+ * - String values
+ * - Numeric values (int, double)
+ * - Boolean values
+ * - Nested objects (limited)
+ */
 class JsonParser {
 public:
     static std::unique_ptr<Config> parse(const std::string& content) {
@@ -103,19 +133,41 @@ private:
     }
 };
 
+/**
+ * @brief Load configuration from JSON file
+ * @param path Path to configuration file
+ * @return Unique pointer to validated configuration
+ * @throws std::runtime_error if file invalid or validation fails
+ * 
+ * Security measures:
+ * 1. Path traversal protection (checks for "..")
+ * 2. Path normalization
+ * 3. Input sanitization
+ * 4. Schema validation
+ * 5. Value range validation
+ * 
+ * Validation sequence:
+ * 1. Validate file path (security)
+ * 2. Load file contents
+ * 3. Parse JSON
+ * 4. Validate schema (required fields)
+ * 5. Validate values (ranges, formats)
+ * 6. Validate dependencies (cross-field)
+ */
 std::unique_ptr<Config> Config::load_from_file(const std::string& path) {
-    // Validate file path to prevent path traversal attacks
+    // Security: Validate file path to prevent path traversal attacks
     std::string base_dir = std::filesystem::current_path() / "configs";
     if (!SecurityUtils::validate_file_path(path, base_dir)) {
         throw std::runtime_error("Invalid config file path: " + SecurityUtils::sanitize_log_input(path));
     }
     
-    // Normalize path
+    // Security: Normalize path (remove "..", "//", etc.)
     std::string normalized_path = SecurityUtils::normalize_path(path);
     if (normalized_path.empty()) {
         throw std::runtime_error("Cannot normalize config file path");
     }
     
+    // Open and read configuration file
     std::ifstream file(normalized_path);
     if (!file.is_open()) {
         throw std::runtime_error("Cannot open config file: " + SecurityUtils::sanitize_log_input(normalized_path));
@@ -125,16 +177,17 @@ std::unique_ptr<Config> Config::load_from_file(const std::string& path) {
     buffer << file.rdbuf();
     
     try {
+        // Parse JSON content
         auto config = JsonParser::parse(buffer.str());
         
-        // Comprehensive configuration validation
+        // Comprehensive configuration validation (schema + values + dependencies)
         auto validation_result = ConfigurationValidator::validate_full_config(*config);
         if (validation_result.has_error()) {
             throw std::runtime_error("Configuration validation failed: " + 
                                    validation_result.error().message());
         }
         
-        // Validate extracted paths
+        // Security: Validate extracted paths (prevent path traversal in config values)
         if (!config->persistence.log_directory.empty()) {
             if (!SecurityUtils::validate_file_path(config->persistence.log_directory, "/var/log/rtes")) {
                 throw std::runtime_error("Invalid log directory path in config");

@@ -1,3 +1,21 @@
+/**
+ * @file http_server.cpp
+ * @brief Simple HTTP server for metrics and health checks
+ * 
+ * Provides:
+ * - Prometheus metrics endpoint (/metrics)
+ * - Health check endpoint (/health)
+ * - Custom handler registration
+ * 
+ * Security features:
+ * - Path traversal protection
+ * - Request size limits
+ * - Input validation
+ * 
+ * Note: Single-threaded blocking server, suitable for low-traffic
+ * metrics collection. For production, consider async I/O.
+ */
+
 #include "rtes/http_server.hpp"
 #include "rtes/logger.hpp"
 #include <sys/socket.h>
@@ -88,11 +106,31 @@ void HttpServer::server_loop() {
     }
 }
 
+/**
+ * @brief Handle HTTP client request
+ * @param client_fd Client socket file descriptor
+ * 
+ * Processing:
+ * 1. Receive request (with size limit)
+ * 2. Parse request line (method, path, version)
+ * 3. Validate path (prevent directory traversal)
+ * 4. Find and invoke handler
+ * 5. Send response
+ * 6. Close connection
+ * 
+ * Security:
+ * - Request size limited to 4KB
+ * - Path traversal protection (checks for ".." and "//")
+ * - Exception handling for handler errors
+ */
 void HttpServer::handle_client(int client_fd) {
     char buffer[4096];
     ssize_t received = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
     
+    // Check for receive errors or empty request
     if (received <= 0) return;
+    
+    // Truncate if request too large (security: prevent buffer overflow)
     if (received >= static_cast<ssize_t>(sizeof(buffer))) {
         LOG_WARN("HTTP request too large, truncating");
         received = sizeof(buffer) - 1;
@@ -101,7 +139,7 @@ void HttpServer::handle_client(int client_fd) {
     buffer[received] = '\0';
     std::string request(buffer, received);
     
-    // Parse request line
+    // Parse request line (first line before \r\n)
     size_t line_end = request.find("\r\n");
     if (line_end == std::string::npos || line_end > 8192) {
         LOG_WARN("Invalid HTTP request format");
@@ -111,7 +149,7 @@ void HttpServer::handle_client(int client_fd) {
     std::string request_line = request.substr(0, line_end);
     std::string path = parse_request_path(request_line);
     
-    // Validate path to prevent directory traversal
+    // Security: Validate path to prevent directory traversal attacks
     if (path.find("..") != std::string::npos || path.find("//") != std::string::npos) {
         LOG_WARN_SAFE("Potential path traversal attempt: {}", path);
         std::string response = create_response(400, "text/plain", "Bad Request");
@@ -121,19 +159,23 @@ void HttpServer::handle_client(int client_fd) {
     
     std::string response;
     
-    // Find handler
+    // Find registered handler for path
     auto it = handlers_.find(path);
     if (it != handlers_.end()) {
         try {
+            // Invoke handler and create 200 OK response
             std::string content = it->second(path, "");
             response = create_response(200, "text/plain; charset=utf-8", content);
         } catch (const std::exception& e) {
+            // Handler threw exception, return 500 error
             response = create_response(500, "text/plain", "Internal Server Error");
         }
     } else {
+        // No handler found, return 404
         response = create_response(404, "text/plain", "Not Found");
     }
     
+    // Send response and increment counter
     send(client_fd, response.c_str(), response.length(), 0);
     requests_served_.fetch_add(1);
 }

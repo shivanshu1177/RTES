@@ -1,17 +1,43 @@
+/**
+ * @file risk_manager.cpp
+ * @brief Pre-trade risk validation and client state management
+ * 
+ * Risk Manager validates:
+ * - Order size limits (max quantity per order)
+ * - Price collars (prevent fat-finger errors)
+ * - Credit limits (max notional per client)
+ * - Rate limits (max orders per second)
+ * - Duplicate orders (prevent accidental resubmission)
+ * - Symbol validation (only allowed symbols)
+ * 
+ * Maintains per-client state:
+ * - Active orders
+ * - Notional exposure
+ * - Order rate tracking
+ */
+
 #include "rtes/risk_manager.hpp"
 #include "rtes/logger.hpp"
 #include "rtes/security_utils.hpp"
 
 namespace rtes {
 
+/**
+ * @brief Risk manager constructor
+ * @param config Risk configuration (limits, collars)
+ * @param symbols Allowed trading symbols
+ * 
+ * Builds symbol lookup map for O(1) validation.
+ */
 RiskManager::RiskManager(const RiskConfig& config, const std::vector<SymbolConfig>& symbols)
     : config_(config) {
     
-    // Build symbol lookup map
+    // Build symbol lookup map for fast validation
     for (const auto& symbol : symbols) {
         symbol_configs_[symbol.symbol] = symbol;
     }
     
+    // SPSC queue for lock-free order submission
     input_queue_ = std::make_unique<SPSCQueue<RiskRequest>>(65536);
 }
 
@@ -62,23 +88,37 @@ void RiskManager::add_matching_engine(const std::string& symbol, MatchingEngine*
     matching_engines_[symbol] = engine;
 }
 
+/**
+ * @brief Main worker loop - validates orders and routes to matching engines
+ * 
+ * Processing:
+ * 1. Pop request from queue (lock-free)
+ * 2. Validate based on type (NEW_ORDER or CANCEL_ORDER)
+ * 3. Route to matching engine if approved
+ * 4. Update client state
+ * 5. Yield CPU if queue empty
+ * 
+ * All risk checks are synchronous for deterministic validation.
+ */
 void RiskManager::run() {
     RiskRequest request;
     
     while (running_.load()) {
+        // Try to pop risk request from queue (lock-free)
         if (input_queue_->pop(request)) {
             switch (request.type) {
                 case RiskRequest::NEW_ORDER: {
+                    // Validate order against all risk checks
                     auto result = validate_new_order(request.order);
                     if (result == RiskResult::APPROVED) {
-                        // Forward to matching engine
+                        // Forward to appropriate matching engine by symbol
                         std::string symbol(request.order->symbol);
                         auto it = matching_engines_.find(symbol);
                         if (it != matching_engines_.end()) {
                             it->second->submit_order(request.order);
                         }
                     } else {
-                        // Reject order
+                        // Reject order and log reason
                         request.order->status = OrderStatus::REJECTED;
                         orders_rejected_.fetch_add(1);
                         LOG_WARN_SAFE("Order rejected: {} for client: {}", 
@@ -89,9 +129,10 @@ void RiskManager::run() {
                     break;
                 }
                 case RiskRequest::CANCEL_ORDER: {
+                    // Validate cancel request (ownership check)
                     auto result = validate_cancel_order(request.order_id, request.client_id);
                     if (result == RiskResult::APPROVED) {
-                        // Forward cancel to all matching engines (symbol unknown)
+                        // Forward cancel to all matching engines (symbol unknown at this point)
                         for (auto& [symbol, engine] : matching_engines_) {
                             engine->cancel_order(request.order_id, request.client_id);
                         }
@@ -101,15 +142,33 @@ void RiskManager::run() {
                 }
             }
         } else {
+            // No work available, yield CPU
             std::this_thread::yield();
         }
     }
 }
 
+/**
+ * @brief Validate new order against all risk checks
+ * @param order Order to validate
+ * @return RiskResult indicating approval or rejection reason
+ * 
+ * Validation sequence (fail-fast):
+ * 1. Input sanitization (symbol, client ID format)
+ * 2. Symbol allowed check
+ * 3. Order size check (max quantity)
+ * 4. Price collar check (prevent fat-finger)
+ * 5. Rate limit check (max orders/sec per client)
+ * 6. Duplicate order check
+ * 7. Credit limit check (max notional exposure)
+ * 8. Update client state if approved
+ * 
+ * All checks are synchronous for deterministic validation.
+ */
 RiskResult RiskManager::validate_new_order(Order* order) {
     if (!order) return RiskResult::REJECTED_SIZE;
     
-    // Validate input data
+    // 1. Validate input data format (security check)
     if (!SecurityUtils::is_valid_symbol(order->symbol)) {
         LOG_WARN_SAFE("Invalid symbol format: {}", SecurityUtils::sanitize_log_input(order->symbol));
         return RiskResult::REJECTED_SYMBOL;
@@ -120,40 +179,40 @@ RiskResult RiskManager::validate_new_order(Order* order) {
         return RiskResult::REJECTED_SIZE;
     }
     
-    // Check symbol allowed
+    // 2. Check symbol is in allowed list
     if (!check_symbol_allowed(order)) {
         return RiskResult::REJECTED_SYMBOL;
     }
     
-    // Check order size
+    // 3. Check order size within limits
     if (!check_order_size(order)) {
         return RiskResult::REJECTED_SIZE;
     }
     
-    // Check price collar
+    // 4. Check price within collar (prevent fat-finger errors)
     if (!check_price_collar(order)) {
         return RiskResult::REJECTED_PRICE;
     }
     
-    // Get or create client state
+    // Get or create client state (per-client tracking)
     auto& client_state = client_states_[order->client_id];
     
-    // Check rate limit
+    // 5. Check rate limit (max orders per second)
     if (!check_rate_limit(client_state)) {
         return RiskResult::REJECTED_RATE_LIMIT;
     }
     
-    // Check duplicate order
+    // 6. Check for duplicate order ID
     if (!check_duplicate_order(order, client_state)) {
         return RiskResult::REJECTED_DUPLICATE;
     }
     
-    // Check credit limit
+    // 7. Check credit limit (max notional exposure)
     if (!check_credit_limit(order, client_state)) {
         return RiskResult::REJECTED_CREDIT;
     }
     
-    // Update client state
+    // All checks passed - update client state
     update_client_state(order, client_state);
     
     return RiskResult::APPROVED;
