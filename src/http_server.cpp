@@ -93,16 +93,31 @@ void HttpServer::handle_client(int client_fd) {
     ssize_t received = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
     
     if (received <= 0) return;
+    if (received >= static_cast<ssize_t>(sizeof(buffer))) {
+        LOG_WARN("HTTP request too large, truncating");
+        received = sizeof(buffer) - 1;
+    }
     
     buffer[received] = '\0';
-    std::string request(buffer);
+    std::string request(buffer, received);
     
     // Parse request line
     size_t line_end = request.find("\r\n");
-    if (line_end == std::string::npos) return;
+    if (line_end == std::string::npos || line_end > 8192) {
+        LOG_WARN("Invalid HTTP request format");
+        return;
+    }
     
     std::string request_line = request.substr(0, line_end);
     std::string path = parse_request_path(request_line);
+    
+    // Validate path to prevent directory traversal
+    if (path.find("..") != std::string::npos || path.find("//") != std::string::npos) {
+        LOG_WARN_SAFE("Potential path traversal attempt: {}", path);
+        std::string response = create_response(400, "text/plain", "Bad Request");
+        send(client_fd, response.c_str(), response.length(), 0);
+        return;
+    }
     
     std::string response;
     

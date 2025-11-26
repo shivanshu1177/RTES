@@ -221,10 +221,17 @@ TcpGateway::TcpGateway(uint16_t port, RiskManager* risk_manager, OrderPool* orde
         [this]() { stop(); }
     );
     SecurityConfig security_config;
-    security_config.tls_cert_file = "certs/server.crt";
-    security_config.tls_key_file = "certs/server.key";
-    security_config.ca_cert_file = "certs/ca.crt";
-    security_config.hmac_key.assign("secure_hmac_key_12345");
+    security_config.tls_cert_file = std::getenv("RTES_TLS_CERT") ? std::getenv("RTES_TLS_CERT") : "certs/server.crt";
+    security_config.tls_key_file = std::getenv("RTES_TLS_KEY") ? std::getenv("RTES_TLS_KEY") : "certs/server.key";
+    security_config.ca_cert_file = std::getenv("RTES_CA_CERT") ? std::getenv("RTES_CA_CERT") : "certs/ca.crt";
+    
+    const char* hmac_key_env = std::getenv("RTES_HMAC_KEY");
+    if (hmac_key_env && std::strlen(hmac_key_env) >= 32) {
+        security_config.hmac_key.assign(hmac_key_env);
+    } else {
+        LOG_ERROR("RTES_HMAC_KEY environment variable not set or too short (min 32 chars)");
+        throw std::runtime_error("Missing or invalid HMAC key");
+    }
     security_config.rate_limit_per_second = 1000;
     
     secure_network_ = std::make_unique<SecureNetworkLayer>(security_config);

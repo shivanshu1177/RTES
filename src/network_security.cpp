@@ -286,7 +286,26 @@ void NetworkSecurityMonitor::record_connection(const std::string& client_ip) {
 void NetworkSecurityMonitor::record_message(const std::string& client_id, size_t message_size) {
     std::lock_guard<std::mutex> lock(metrics_mutex_);
     
+    // Validate message size to prevent integer overflow
+    if (message_size > 1048576) { // 1MB max
+        LOG_WARN_SAFE("Abnormally large message size: {} from client: {}", message_size, client_id);
+        stats_.anomalies_detected.fetch_add(1);
+        return;
+    }
+    
     auto& client_metrics = client_metrics_[client_id];
+    
+    // Check for overflow before incrementing
+    if (client_metrics.message_count == UINT64_MAX) {
+        LOG_ERROR_SAFE("Message count overflow for client: {}", client_id);
+        return;
+    }
+    
+    if (client_metrics.total_bytes > UINT64_MAX - message_size) {
+        LOG_ERROR_SAFE("Total bytes overflow for client: {}", client_id);
+        return;
+    }
+    
     client_metrics.message_count++;
     client_metrics.total_bytes += message_size;
     client_metrics.last_activity = std::chrono::steady_clock::now();
@@ -346,9 +365,13 @@ void NetworkSecurityMonitor::generate_security_alert(const std::string& alert_ty
 
 // ClientAuthenticator implementation
 ClientAuthenticator::ClientAuthenticator(const SecurityConfig& config) : config_(config) {
-    // Initialize API keys (in production, load from secure storage)
-    api_keys_["test_api_key_123"] = "client1";
-    api_keys_["prod_api_key_456"] = "client2";
+    // Load API keys from secure storage (environment variables or key management service)
+    const char* api_keys_env = std::getenv("RTES_API_KEYS_FILE");
+    if (api_keys_env) {
+        load_api_keys_from_file(api_keys_env);
+    } else {
+        LOG_WARN("No API keys file configured. Set RTES_API_KEYS_FILE environment variable.");
+    }
 }
 
 Result<std::string> ClientAuthenticator::authenticate_certificate(SSL* ssl) {
@@ -400,13 +423,16 @@ Result<std::string> ClientAuthenticator::create_session(const std::string& clien
 }
 
 std::string ClientAuthenticator::generate_session_token() {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 15);
+    // Use cryptographically secure random number generation
+    unsigned char random_bytes[32];
+    if (RAND_bytes(random_bytes, sizeof(random_bytes)) != 1) {
+        LOG_ERROR("Failed to generate secure random bytes");
+        throw std::runtime_error("Cryptographic random generation failed");
+    }
     
     std::stringstream ss;
-    for (int i = 0; i < 32; ++i) {
-        ss << std::hex << dis(gen);
+    for (size_t i = 0; i < sizeof(random_bytes); ++i) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(random_bytes[i]);
     }
     
     return ss.str();
@@ -479,3 +505,110 @@ bool SecureNetworkLayer::is_client_rate_limited(const std::string& client_id) {
 }
 
 } // namespace rtes
+
+void SecureTcpChannel::close_connection(SSL* ssl) {
+    if (ssl) {
+        SSL_shutdown(ssl);
+        int fd = SSL_get_fd(ssl);
+        SSL_free(ssl);
+        if (fd >= 0) {
+            close(fd);
+        }
+    }
+}
+
+void SecureNetworkLayer::record_security_event(const std::string& event_type, const std::string& client_id) {
+    security_monitor_->record_message(client_id, 0);
+    LOG_INFO_SAFE("Security event [{}] for client: {}", event_type, client_id);
+}
+
+bool SecureNetworkLayer::should_block_ip(const std::string& ip_address) {
+    return security_monitor_->should_block_connection(ip_address);
+}
+
+Result<size_t> SecureNetworkLayer::read_secure_tcp_message(SSL* ssl, void* buffer, size_t size) {
+    return tcp_channel_->secure_read(ssl, buffer, size);
+}
+
+Result<size_t> SecureNetworkLayer::write_secure_tcp_message(SSL* ssl, const void* buffer, size_t size) {
+    return tcp_channel_->secure_write(ssl, buffer, size);
+}
+
+Result<bool> SecureNetworkLayer::verify_udp_message(const void* data, size_t size) {
+    return udp_broadcast_->verify_message_authenticity(data, size);
+}
+
+void RateLimiter::reset_client(const std::string& client_id) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    buckets_.erase(client_id);
+}
+
+void ClientAuthenticator::invalidate_session(const std::string& session_token) {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    active_sessions_.erase(session_token);
+}
+
+void ClientAuthenticator::cleanup_expired_sessions() {
+    std::lock_guard<std::mutex> lock(sessions_mutex_);
+    auto now = std::chrono::steady_clock::now();
+    
+    for (auto it = active_sessions_.begin(); it != active_sessions_.end();) {
+        if (now - it->second.created > config_.session_timeout) {
+            it = active_sessions_.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
+Result<std::string> ClientAuthenticator::validate_api_key(const std::string& api_key) {
+    auto it = api_keys_.find(api_key);
+    if (it == api_keys_.end()) {
+        return ErrorCode::NETWORK_CONNECTION_FAILED;
+    }
+    return it->second;
+}
+
+void NetworkSecurityMonitor::record_authentication_failure(const std::string& client_ip) {
+    std::lock_guard<std::mutex> lock(metrics_mutex_);
+    
+    auto& ip_metrics = ip_metrics_[client_ip];
+    ip_metrics.auth_failures++;
+    ip_metrics.last_failure = std::chrono::steady_clock::now();
+    
+    stats_.auth_failures.fetch_add(1);
+    
+    if (ip_metrics.auth_failures >= MAX_AUTH_FAILURES) {
+        generate_security_alert("AUTH_FAILURE_THRESHOLD", client_ip);
+    }
+}
+
+Result<bool> AuthenticatedUdpBroadcast::verify_message_authenticity(const void* data, size_t size) {
+    if (!data || size < sizeof(AuthenticatedMessage)) {
+        return ErrorCode::INVALID_ARGUMENT;
+    }
+    
+    const AuthenticatedMessage* auth_msg = static_cast<const AuthenticatedMessage*>(data);
+    
+    if (size < sizeof(AuthenticatedMessage) + auth_msg->hmac_size) {
+        return ErrorCode::INVALID_ARGUMENT;
+    }
+    
+    const uint8_t* payload = static_cast<const uint8_t*>(data) + sizeof(AuthenticatedMessage);
+    size_t payload_size = size - sizeof(AuthenticatedMessage) - auth_msg->hmac_size;
+    const uint8_t* received_hmac = payload + payload_size;
+    
+    uint8_t computed_hmac[EVP_MAX_MD_SIZE];
+    size_t hmac_len = 0;
+    
+    auto result = compute_hmac(payload, payload_size, computed_hmac, &hmac_len);
+    if (result.has_error()) {
+        return result.error();
+    }
+    
+    if (hmac_len != auth_msg->hmac_size) {
+        return false;
+    }
+    
+    return CRYPTO_memcmp(computed_hmac, received_hmac, hmac_len) == 0;
+}

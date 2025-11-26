@@ -111,19 +111,43 @@ bool SecurityUtils::is_authorized_for_operation(const AuthContext& ctx, const st
 AuthContext SecurityUtils::authenticate_user(std::string_view token) {
     AuthContext ctx;
     
-    // Basic token validation (implement proper JWT/OAuth in production)
-    if (token.empty() || token.size() < 10) {
+    // Validate token format and length
+    if (token.empty() || token.size() < 32 || token.size() > 512) {
+        LOG_WARN("Invalid token length");
         return ctx; // Not authenticated
     }
     
-    // Mock authentication - replace with real implementation
-    if (token == "admin_token_12345") {
-        ctx.user_id = "admin";
+    // Validate token contains only safe characters
+    if (!is_safe_string(token)) {
+        LOG_WARN("Token contains invalid characters");
+        return ctx;
+    }
+    
+    // TODO: Implement proper JWT/OAuth validation
+    // This is a placeholder - MUST be replaced with secure authentication
+    // For production:
+    // 1. Validate JWT signature using public key
+    // 2. Check token expiration
+    // 3. Verify issuer and audience claims
+    // 4. Query user database for permissions
+    
+    LOG_WARN("Using mock authentication - NOT FOR PRODUCTION USE");
+    
+    // Mock implementation for development only
+    const char* auth_mode = std::getenv("RTES_AUTH_MODE");
+    if (!auth_mode || std::string(auth_mode) != "development") {
+        LOG_ERROR("Mock authentication disabled in non-development mode");
+        return ctx;
+    }
+    
+    // Development-only mock authentication
+    if (token.starts_with("dev_admin_")) {
+        ctx.user_id = std::string(token.substr(10, 16));
         ctx.role = UserRole::ADMIN;
         ctx.authenticated = true;
         ctx.permissions = {"all"};
-    } else if (token.starts_with("trader_")) {
-        ctx.user_id = std::string(token.substr(7));
+    } else if (token.starts_with("dev_trader_")) {
+        ctx.user_id = std::string(token.substr(11, 16));
         ctx.role = UserRole::TRADER;
         ctx.authenticated = true;
         ctx.permissions = {"place_order", "cancel_order", "view_positions"};

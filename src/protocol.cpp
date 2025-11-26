@@ -23,7 +23,13 @@ uint32_t ProtocolUtils::calculate_checksum(const void* data, size_t length) {
 }
 
 bool ProtocolUtils::validate_checksum(const MessageHeader& header, const void* payload) {
-    if (header.length < sizeof(MessageHeader)) return false;
+    if (header.length < sizeof(MessageHeader) || header.length > 8192) {
+        return false;
+    }
+    
+    if (!payload) {
+        return false;
+    }
     
     size_t payload_length = header.length - sizeof(MessageHeader);
     uint32_t calculated = calculate_checksum(payload, payload_length);
@@ -32,6 +38,11 @@ bool ProtocolUtils::validate_checksum(const MessageHeader& header, const void* p
 }
 
 void ProtocolUtils::set_checksum(MessageHeader& header, const void* payload) {
+    if (header.length < sizeof(MessageHeader) || header.length > 8192 || !payload) {
+        header.checksum = 0;
+        return;
+    }
+    
     size_t payload_length = header.length - sizeof(MessageHeader);
     header.checksum = calculate_checksum(payload, payload_length);
 }

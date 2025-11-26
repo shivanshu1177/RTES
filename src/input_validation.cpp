@@ -531,6 +531,9 @@ const std::unordered_set<char> InputSanitizer::CONTROL_CHARS = {
 };
 
 std::string InputSanitizer::sanitize_network_input(const std::string& input) {
+    if (input.empty() || input.size() > 8192) {
+        return "";
+    }
     std::string result = remove_control_chars(input);
     result = escape_special_chars(result);
     return normalize_whitespace(result);
@@ -541,7 +544,7 @@ std::string InputSanitizer::remove_control_chars(const std::string& input) {
     result.reserve(input.size());
     
     for (char c : input) {
-        if (!CONTROL_CHARS.contains(c)) {
+        if (!CONTROL_CHARS.contains(c) && (c >= 0x20 || c == '\t' || c == '\n' || c == '\r')) {
             result += c;
         }
     }
@@ -555,7 +558,7 @@ std::string InputSanitizer::normalize_whitespace(const std::string& input) {
     
     bool prev_space = false;
     for (char c : input) {
-        if (std::isspace(c)) {
+        if (std::isspace(static_cast<unsigned char>(c))) {
             if (!prev_space) {
                 result += ' ';
                 prev_space = true;
@@ -564,6 +567,11 @@ std::string InputSanitizer::normalize_whitespace(const std::string& input) {
             result += c;
             prev_space = false;
         }
+    }
+    
+    // Trim leading space
+    if (!result.empty() && result.front() == ' ') {
+        result.erase(0, 1);
     }
     
     // Trim trailing space
