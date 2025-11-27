@@ -1,7 +1,10 @@
 #include "rtes/network_security.hpp"
+#include <unistd.h>
 #include "rtes/logger.hpp"
 #include <openssl/err.h>
 #include <openssl/x509.h>
+#include <openssl/rand.h>
+#include <openssl/hmac.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -29,7 +32,7 @@ bool RateLimiter::try_consume(const std::string& client_id, uint32_t tokens) {
     return false;
 }
 
-void RateLimiter::refill_bucket(TokenBucket& bucket) {
+void rtes::RateLimiter::refill_bucket(TokenBucket& bucket) {
     auto now = std::chrono::steady_clock::now();
     
     if (bucket.last_refill == std::chrono::steady_clock::time_point{}) {
@@ -60,7 +63,7 @@ SecureTcpChannel::~SecureTcpChannel() {
     }
 }
 
-Result<void> SecureTcpChannel::initialize() {
+rtes::Result<void> SecureTcpChannel::initialize() {
     SSL_library_init();
     SSL_load_error_strings();
     OpenSSL_add_all_algorithms();
@@ -68,7 +71,7 @@ Result<void> SecureTcpChannel::initialize() {
     return setup_ssl_context();
 }
 
-Result<void> SecureTcpChannel::setup_ssl_context() {
+rtes::Result<void> SecureTcpChannel::setup_ssl_context() {
     ssl_ctx_ = SSL_CTX_new(TLS_server_method());
     if (!ssl_ctx_) {
         return ErrorCode::NETWORK_CONNECTION_FAILED;
@@ -98,7 +101,7 @@ Result<void> SecureTcpChannel::setup_ssl_context() {
     return Result<void>();
 }
 
-Result<void> SecureTcpChannel::load_certificates() {
+rtes::Result<void> SecureTcpChannel::load_certificates() {
     if (SSL_CTX_use_certificate_file(ssl_ctx_, config_.tls_cert_file.c_str(), SSL_FILETYPE_PEM) != 1) {
         LOG_ERROR_SAFE("Failed to load certificate: {}", config_.tls_cert_file);
         return ErrorCode::FILE_NOT_FOUND;
@@ -117,7 +120,7 @@ Result<void> SecureTcpChannel::load_certificates() {
     return Result<void>();
 }
 
-Result<int> SecureTcpChannel::accept_secure_connection(int listen_fd) {
+rtes::Result<int> SecureTcpChannel::accept_secure_connection(int listen_fd) {
     struct sockaddr_in client_addr;
     socklen_t addr_len = sizeof(client_addr);
     
@@ -150,10 +153,10 @@ Result<int> SecureTcpChannel::accept_secure_connection(int listen_fd) {
         }
     }
     
-    return reinterpret_cast<int>(ssl); // Return SSL pointer as int (unsafe but minimal)
+    return reinterpret_cast<intptr_t>(ssl); // Return SSL pointer as intptr_t
 }
 
-Result<void> SecureTcpChannel::verify_client_certificate(SSL* ssl) {
+rtes::Result<void> SecureTcpChannel::verify_client_certificate(SSL* ssl) {
     X509* cert = SSL_get_peer_certificate(ssl);
     if (!cert) {
         return ErrorCode::NETWORK_CONNECTION_FAILED;
@@ -170,7 +173,7 @@ Result<void> SecureTcpChannel::verify_client_certificate(SSL* ssl) {
     return Result<void>();
 }
 
-Result<size_t> SecureTcpChannel::secure_read(SSL* ssl, void* buffer, size_t size) {
+rtes::Result<size_t> SecureTcpChannel::secure_read(SSL* ssl, void* buffer, size_t size) {
     int bytes_read = SSL_read(ssl, buffer, static_cast<int>(size));
     if (bytes_read <= 0) {
         int error = SSL_get_error(ssl, bytes_read);
@@ -183,7 +186,7 @@ Result<size_t> SecureTcpChannel::secure_read(SSL* ssl, void* buffer, size_t size
     return static_cast<size_t>(bytes_read);
 }
 
-Result<size_t> SecureTcpChannel::secure_write(SSL* ssl, const void* buffer, size_t size) {
+rtes::Result<size_t> SecureTcpChannel::secure_write(SSL* ssl, const void* buffer, size_t size) {
     int bytes_written = SSL_write(ssl, buffer, static_cast<int>(size));
     if (bytes_written <= 0) {
         int error = SSL_get_error(ssl, bytes_written);
@@ -199,14 +202,14 @@ Result<size_t> SecureTcpChannel::secure_write(SSL* ssl, const void* buffer, size
 // AuthenticatedUdpBroadcast implementation
 AuthenticatedUdpBroadcast::AuthenticatedUdpBroadcast(const SecurityConfig& config) : config_(config) {}
 
-Result<void> AuthenticatedUdpBroadcast::initialize() {
+rtes::Result<void> rtes::AuthenticatedUdpBroadcast::initialize() {
     if (config_.hmac_key.empty()) {
         return ErrorCode::INVALID_CONFIGURATION;
     }
     return Result<void>();
 }
 
-Result<void> AuthenticatedUdpBroadcast::send_authenticated_message(const void* data, size_t size, const std::string& multicast_group, uint16_t port) {
+rtes::Result<void> rtes::AuthenticatedUdpBroadcast::send_authenticated_message(const void* data, size_t size, const std::string& multicast_group, uint16_t port) {
     // Compute HMAC
     uint8_t hmac[EVP_MAX_MD_SIZE];
     size_t hmac_len = 0;
@@ -255,7 +258,7 @@ Result<void> AuthenticatedUdpBroadcast::send_authenticated_message(const void* d
     return Result<void>();
 }
 
-Result<void> AuthenticatedUdpBroadcast::compute_hmac(const void* data, size_t size, uint8_t* hmac, size_t* hmac_len) {
+rtes::Result<void> rtes::AuthenticatedUdpBroadcast::compute_hmac(const void* data, size_t size, uint8_t* hmac, size_t* hmac_len) {
     unsigned int len = 0;
     
     if (!HMAC(EVP_sha256(), config_.hmac_key.c_str(), config_.hmac_key.length(),
@@ -270,7 +273,7 @@ Result<void> AuthenticatedUdpBroadcast::compute_hmac(const void* data, size_t si
 // NetworkSecurityMonitor implementation
 NetworkSecurityMonitor::NetworkSecurityMonitor() {}
 
-void NetworkSecurityMonitor::record_connection(const std::string& client_ip) {
+void rtes::NetworkSecurityMonitor::record_connection(const std::string& client_ip) {
     std::lock_guard<std::mutex> lock(metrics_mutex_);
     
     auto& ip_metrics = ip_metrics_[client_ip];
@@ -283,7 +286,7 @@ void NetworkSecurityMonitor::record_connection(const std::string& client_ip) {
     stats_.total_connections.fetch_add(1);
 }
 
-void NetworkSecurityMonitor::record_message(const std::string& client_id, size_t message_size) {
+void rtes::NetworkSecurityMonitor::record_message(const std::string& client_id, size_t message_size) {
     std::lock_guard<std::mutex> lock(metrics_mutex_);
     
     // Validate message size to prevent integer overflow
@@ -359,7 +362,7 @@ bool NetworkSecurityMonitor::should_block_connection(const std::string& client_i
     return false;
 }
 
-void NetworkSecurityMonitor::generate_security_alert(const std::string& alert_type, const std::string& details) {
+void rtes::NetworkSecurityMonitor::generate_security_alert(const std::string& alert_type, const std::string& details) {
     LOG_WARN_SAFE("SECURITY ALERT [{}]: {}", alert_type, details);
 }
 
@@ -368,13 +371,14 @@ ClientAuthenticator::ClientAuthenticator(const SecurityConfig& config) : config_
     // Load API keys from secure storage (environment variables or key management service)
     const char* api_keys_env = std::getenv("RTES_API_KEYS_FILE");
     if (api_keys_env) {
-        load_api_keys_from_file(api_keys_env);
+        // TODO: Implement load_api_keys_from_file
+        LOG_INFO_SAFE("API keys file: {}", api_keys_env);
     } else {
         LOG_WARN("No API keys file configured. Set RTES_API_KEYS_FILE environment variable.");
     }
 }
 
-Result<std::string> ClientAuthenticator::authenticate_certificate(SSL* ssl) {
+rtes::Result<std::string> rtes::ClientAuthenticator::authenticate_certificate(SSL* ssl) {
     X509* cert = SSL_get_peer_certificate(ssl);
     if (!cert) {
         return ErrorCode::NETWORK_CONNECTION_FAILED;
@@ -390,7 +394,7 @@ Result<std::string> ClientAuthenticator::authenticate_certificate(SSL* ssl) {
     return client_id;
 }
 
-std::string ClientAuthenticator::extract_client_id_from_cert(SSL* ssl) {
+std::string rtes::ClientAuthenticator::extract_client_id_from_cert(SSL* ssl) {
     X509* cert = SSL_get_peer_certificate(ssl);
     if (!cert) return "";
     
@@ -407,7 +411,7 @@ std::string ClientAuthenticator::extract_client_id_from_cert(SSL* ssl) {
     return std::string(cn);
 }
 
-Result<std::string> ClientAuthenticator::create_session(const std::string& client_id) {
+rtes::Result<std::string> rtes::ClientAuthenticator::create_session(const std::string& client_id) {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
     
     std::string token = generate_session_token();
@@ -422,7 +426,7 @@ Result<std::string> ClientAuthenticator::create_session(const std::string& clien
     return token;
 }
 
-std::string ClientAuthenticator::generate_session_token() {
+std::string rtes::ClientAuthenticator::generate_session_token() {
     // Use cryptographically secure random number generation
     unsigned char random_bytes[32];
     if (RAND_bytes(random_bytes, sizeof(random_bytes)) != 1) {
@@ -438,7 +442,7 @@ std::string ClientAuthenticator::generate_session_token() {
     return ss.str();
 }
 
-bool ClientAuthenticator::validate_session(const std::string& session_token) {
+bool rtes::ClientAuthenticator::validate_session(const std::string& session_token) {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
     
     auto it = active_sessions_.find(session_token);
@@ -467,7 +471,7 @@ SecureNetworkLayer::SecureNetworkLayer(const SecurityConfig& config) : config_(c
 
 SecureNetworkLayer::~SecureNetworkLayer() = default;
 
-Result<void> SecureNetworkLayer::initialize() {
+rtes::Result<void> rtes::SecureNetworkLayer::initialize() {
     auto tcp_result = tcp_channel_->initialize();
     if (tcp_result.has_error()) return tcp_result;
     
@@ -478,7 +482,7 @@ Result<void> SecureNetworkLayer::initialize() {
     return Result<void>();
 }
 
-Result<int> SecureNetworkLayer::accept_secure_tcp_connection(int listen_fd, std::string& client_id) {
+rtes::Result<int> rtes::SecureNetworkLayer::accept_secure_tcp_connection(int listen_fd, std::string& client_id) {
     auto ssl_result = tcp_channel_->accept_secure_connection(listen_fd);
     if (ssl_result.has_error()) {
         return ssl_result.error();
@@ -496,17 +500,17 @@ Result<int> SecureNetworkLayer::accept_secure_tcp_connection(int listen_fd, std:
     return ssl_result.value();
 }
 
-Result<void> SecureNetworkLayer::broadcast_market_data(const void* data, size_t size) {
+rtes::Result<void> rtes::SecureNetworkLayer::broadcast_market_data(const void* data, size_t size) {
     return udp_broadcast_->send_authenticated_message(data, size, "239.0.0.1", 9999);
 }
 
-bool SecureNetworkLayer::is_client_rate_limited(const std::string& client_id) {
+bool rtes::SecureNetworkLayer::is_client_rate_limited(const std::string& client_id) {
     return !rate_limiter_->try_consume(client_id);
 }
 
 } // namespace rtes
 
-void SecureTcpChannel::close_connection(SSL* ssl) {
+void rtes::SecureTcpChannel::close_connection(SSL* ssl) {
     if (ssl) {
         SSL_shutdown(ssl);
         int fd = SSL_get_fd(ssl);
@@ -517,38 +521,38 @@ void SecureTcpChannel::close_connection(SSL* ssl) {
     }
 }
 
-void SecureNetworkLayer::record_security_event(const std::string& event_type, const std::string& client_id) {
+void rtes::SecureNetworkLayer::record_security_event(const std::string& event_type, const std::string& client_id) {
     security_monitor_->record_message(client_id, 0);
     LOG_INFO_SAFE("Security event [{}] for client: {}", event_type, client_id);
 }
 
-bool SecureNetworkLayer::should_block_ip(const std::string& ip_address) {
+bool rtes::SecureNetworkLayer::should_block_ip(const std::string& ip_address) {
     return security_monitor_->should_block_connection(ip_address);
 }
 
-Result<size_t> SecureNetworkLayer::read_secure_tcp_message(SSL* ssl, void* buffer, size_t size) {
+rtes::Result<size_t> rtes::SecureNetworkLayer::read_secure_tcp_message(SSL* ssl, void* buffer, size_t size) {
     return tcp_channel_->secure_read(ssl, buffer, size);
 }
 
-Result<size_t> SecureNetworkLayer::write_secure_tcp_message(SSL* ssl, const void* buffer, size_t size) {
+rtes::Result<size_t> rtes::SecureNetworkLayer::write_secure_tcp_message(SSL* ssl, const void* buffer, size_t size) {
     return tcp_channel_->secure_write(ssl, buffer, size);
 }
 
-Result<bool> SecureNetworkLayer::verify_udp_message(const void* data, size_t size) {
+rtes::Result<bool> rtes::SecureNetworkLayer::verify_udp_message(const void* data, size_t size) {
     return udp_broadcast_->verify_message_authenticity(data, size);
 }
 
-void RateLimiter::reset_client(const std::string& client_id) {
+void rtes::RateLimiter::reset_client(const std::string& client_id) {
     std::lock_guard<std::mutex> lock(mutex_);
     buckets_.erase(client_id);
 }
 
-void ClientAuthenticator::invalidate_session(const std::string& session_token) {
+void rtes::ClientAuthenticator::invalidate_session(const std::string& session_token) {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
     active_sessions_.erase(session_token);
 }
 
-void ClientAuthenticator::cleanup_expired_sessions() {
+void rtes::ClientAuthenticator::cleanup_expired_sessions() {
     std::lock_guard<std::mutex> lock(sessions_mutex_);
     auto now = std::chrono::steady_clock::now();
     
@@ -561,7 +565,7 @@ void ClientAuthenticator::cleanup_expired_sessions() {
     }
 }
 
-Result<std::string> ClientAuthenticator::validate_api_key(const std::string& api_key) {
+rtes::Result<std::string> rtes::ClientAuthenticator::validate_api_key(const std::string& api_key) {
     auto it = api_keys_.find(api_key);
     if (it == api_keys_.end()) {
         return ErrorCode::NETWORK_CONNECTION_FAILED;
@@ -569,7 +573,7 @@ Result<std::string> ClientAuthenticator::validate_api_key(const std::string& api
     return it->second;
 }
 
-void NetworkSecurityMonitor::record_authentication_failure(const std::string& client_ip) {
+void rtes::NetworkSecurityMonitor::record_authentication_failure(const std::string& client_ip) {
     std::lock_guard<std::mutex> lock(metrics_mutex_);
     
     auto& ip_metrics = ip_metrics_[client_ip];
@@ -583,7 +587,7 @@ void NetworkSecurityMonitor::record_authentication_failure(const std::string& cl
     }
 }
 
-Result<bool> AuthenticatedUdpBroadcast::verify_message_authenticity(const void* data, size_t size) {
+rtes::Result<bool> rtes::AuthenticatedUdpBroadcast::verify_message_authenticity(const void* data, size_t size) {
     if (!data || size < sizeof(AuthenticatedMessage)) {
         return ErrorCode::INVALID_ARGUMENT;
     }

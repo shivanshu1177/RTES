@@ -1,5 +1,7 @@
 #include "rtes/dashboard.hpp"
 #include <sstream>
+#include <iomanip>
+#include <ctime>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -45,7 +47,7 @@ void OperationalDashboard::add_panel(const DashboardPanel& panel) {
 std::string OperationalDashboard::render_dashboard() const {
     std::ostringstream html;
     
-    html << R"(<!DOCTYPE html>
+    html << R"HTML(<!DOCTYPE html>
 <html>
 <head>
     <title>RTES Operational Dashboard</title>
@@ -76,17 +78,17 @@ std::string OperationalDashboard::render_dashboard() const {
     </div>
     <button class="refresh" onclick="refreshDashboard()">Refresh</button>
     <div class="grid">
-)";
+)HTML";
     
     std::shared_lock lock(panels_mutex_);
     for (const auto& panel : panels_) {
         html << render_panel(panel);
     }
     
-    html << R"(
+    html << R"HTML(
     </div>
 </body>
-</html>)";
+</html>)HTML";
     
     return html.str();
 }
@@ -336,7 +338,7 @@ std::string AlertingDashboard::render_alerts_page() const {
     
     std::ostringstream html;
     
-    html << R"(<!DOCTYPE html>
+    html << R"HTML(<!DOCTYPE html>
 <html>
 <head>
     <title>RTES Alerts</title>
@@ -359,13 +361,13 @@ std::string AlertingDashboard::render_alerts_page() const {
         <h1>RTES Alert Management</h1>
         <p>Active alerts and incident management</p>
     </div>
-)";
+)HTML";
     
     html << format_alert_table(alerts);
     
-    html << R"(
+    html << R"HTML(
 </body>
-</html>)";
+</html>)HTML";
     
     return html.str();
 }

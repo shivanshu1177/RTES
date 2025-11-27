@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rtes/error_handling.hpp"
+#include "rtes/types.hpp"
 #include <functional>
 #include <vector>
 #include <memory>

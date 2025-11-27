@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 using namespace rtes;
 
@@ -152,7 +153,7 @@ private:
                   << " P99 " << (p99_slo ? "✓" : "✗")
                   << " P999 " << (p999_slo ? "✓" : "✗") << std::endl;
         
-        std::string result = "Single Client Latency: " + 
+        std::string result = std::string("Single Client Latency: ") + 
                            (avg_slo && p99_slo && p999_slo ? "PASSED" : "FAILED");
         test_results_.push_back(result);
     }
@@ -220,7 +221,7 @@ private:
             }
         }
         
-        std::string result = "Throughput Scaling: " + (throughput_slo_met ? "PASSED" : "FAILED");
+        std::string result = std::string("Throughput Scaling: ") + (throughput_slo_met ? "PASSED" : "FAILED");
         test_results_.push_back(result);
     }
     
@@ -316,7 +317,7 @@ private:
         bool sustained_slo = reject_rate < 5.0;  // Less than 5% reject rate
         std::cout << "  SLO Check: " << (sustained_slo ? "✓" : "✗") << " Reject rate" << std::endl;
         
-        std::string result = "Sustained Load: " + (sustained_slo ? "PASSED" : "FAILED");
+        std::string result = std::string("Sustained Load: ") + (sustained_slo ? "PASSED" : "FAILED");
         test_results_.push_back(result);
         
         // Cleanup
@@ -364,7 +365,7 @@ private:
         bool burst_slo = burst_rate >= 500000;  // 500K orders/sec burst capability
         std::cout << "  SLO Check: " << (burst_slo ? "✓" : "✗") << " Burst rate" << std::endl;
         
-        std::string result = "Burst Handling: " + (burst_slo ? "PASSED" : "FAILED");
+        std::string result = std::string("Burst Handling: ") + (burst_slo ? "PASSED" : "FAILED");
         test_results_.push_back(result);
     }
     
@@ -432,7 +433,7 @@ private:
             bool md_slo = messages_received > 10;  // Should receive some market data
             std::cout << "  SLO Check: " << (md_slo ? "✓" : "✗") << " Market data flow" << std::endl;
             
-            std::string result = "Market Data Latency: " + (md_slo ? "PASSED" : "FAILED");
+            std::string result = std::string("Market Data Latency: ") + (md_slo ? "PASSED" : "FAILED");
             test_results_.push_back(result);
         } else {
             test_results_.push_back("Market Data Latency: FAILED (connection)");

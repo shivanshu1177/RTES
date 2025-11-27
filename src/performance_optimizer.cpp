@@ -153,7 +153,9 @@ void PerformanceOptimizer::print_performance_stats() const {
 }
 
 void PerformanceOptimizer::reset_all_stats() {
-    memory_monitor_ = MemoryMonitor();
+    // Reset memory monitor by creating new instance
+    memory_monitor_.~MemoryMonitor();
+    new (&memory_monitor_) MemoryMonitor();
     
     for (auto& [operation, tracker] : latency_trackers_) {
         tracker->reset();

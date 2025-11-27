@@ -50,8 +50,8 @@ public:
         msg.header = MessageHeader(NEW_ORDER, sizeof(NewOrderMessage), ++sequence_,
                                  ProtocolUtils::get_timestamp_ns());
         msg.order_id = order_id;
-        msg.client_id = client_id;
-        std::strncpy(msg.symbol, symbol.c_str(), sizeof(msg.symbol) - 1);
+        msg.client_id = std::to_string(client_id);
+        msg.symbol = symbol;
         msg.side = static_cast<uint8_t>(side);
         msg.quantity = quantity;
         msg.price = price;
@@ -76,8 +76,8 @@ public:
         msg.header = MessageHeader(CANCEL_ORDER, sizeof(CancelOrderMessage), ++sequence_,
                                  ProtocolUtils::get_timestamp_ns());
         msg.order_id = order_id;
-        msg.client_id = client_id;
-        std::strncpy(msg.symbol, symbol.c_str(), sizeof(msg.symbol) - 1);
+        msg.client_id = std::to_string(client_id);
+        msg.symbol = symbol;
         
         ProtocolUtils::set_checksum(msg.header, &msg.order_id);
         

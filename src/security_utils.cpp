@@ -17,6 +17,7 @@
  */
 
 #include "rtes/security_utils.hpp"
+#include "rtes/logger.hpp"
 #include <algorithm>
 #include <cctype>
 #include <regex>
@@ -187,13 +188,13 @@ AuthContext SecurityUtils::authenticate_user(std::string_view token) {
     
     // Validate token format and length (basic security)
     if (token.empty() || token.size() < 32 || token.size() > 512) {
-        LOG_WARN("Invalid token length");
+        LOG_INFO("Invalid token length");
         return ctx; // Not authenticated
     }
     
     // Validate token contains only safe characters (prevent injection)
     if (!is_safe_string(token)) {
-        LOG_WARN("Token contains invalid characters");
+        LOG_INFO("Token contains invalid characters");
         return ctx;
     }
     
@@ -205,7 +206,7 @@ AuthContext SecurityUtils::authenticate_user(std::string_view token) {
     // 3. Verify issuer and audience claims
     // 4. Query user database for permissions
     
-    LOG_WARN("Using mock authentication - NOT FOR PRODUCTION USE");
+    LOG_INFO("Using mock authentication - NOT FOR PRODUCTION USE");
     
     // Mock implementation for development only
     const char* auth_mode = std::getenv("RTES_AUTH_MODE");

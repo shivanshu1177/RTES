@@ -241,7 +241,7 @@ bool RiskManager::check_order_size(const Order* order) const {
 bool RiskManager::check_price_collar(const Order* order) const {
     if (!config_.price_collar_enabled) return true;
     
-    const auto* symbol_config = get_symbol_config(order->symbol);
+    const auto* symbol_config = get_symbol_config(std::string(order->symbol.c_str()));
     if (!symbol_config) return false;
     
     // For simplicity, assume reference price is current order price
@@ -282,7 +282,7 @@ bool RiskManager::check_duplicate_order(const Order* order, const ClientRiskStat
 }
 
 bool RiskManager::check_symbol_allowed(const Order* order) const {
-    return symbol_configs_.find(order->symbol) != symbol_configs_.end();
+    return symbol_configs_.find(std::string(order->symbol.c_str())) != symbol_configs_.end();
 }
 
 bool RiskManager::check_cancel_ownership(OrderID order_id, ClientID client_id) const {

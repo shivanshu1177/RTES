@@ -83,8 +83,8 @@ bool ClientBase::send_new_order(const std::string& symbol, Side side, uint64_t q
     msg.header = MessageHeader(NEW_ORDER, sizeof(NewOrderMessage), ++sequence_,
                               ProtocolUtils::get_timestamp_ns());
     msg.order_id = generate_order_id();
-    msg.client_id = client_id_;
-    std::strncpy(msg.symbol, symbol.c_str(), sizeof(msg.symbol) - 1);
+    msg.client_id = std::to_string(client_id_).c_str();
+    msg.symbol = symbol.c_str();
     msg.side = static_cast<uint8_t>(side);
     msg.quantity = quantity;
     msg.price = price;
@@ -105,8 +105,8 @@ bool ClientBase::send_cancel_order(uint64_t order_id, const std::string& symbol)
     msg.header = MessageHeader(CANCEL_ORDER, sizeof(CancelOrderMessage), ++sequence_,
                               ProtocolUtils::get_timestamp_ns());
     msg.order_id = order_id;
-    msg.client_id = client_id_;
-    std::strncpy(msg.symbol, symbol.c_str(), sizeof(msg.symbol) - 1);
+    msg.client_id = std::to_string(client_id_).c_str();
+    msg.symbol = symbol.c_str();
     
     ProtocolUtils::set_checksum(msg.header, &msg.order_id);
     

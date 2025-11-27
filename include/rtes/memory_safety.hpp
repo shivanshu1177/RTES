@@ -117,6 +117,51 @@ public:
     bool empty() const noexcept { return length_ == 0; }
     void clear() noexcept { length_ = 0; data_[0] = '\0'; }
     
+    // Conversion operators
+    operator const char*() const noexcept { return data_.data(); }
+    operator std::string_view() const noexcept { return std::string_view(data_.data(), length_); }
+    
+    // Assignment operators
+    BoundedString& operator=(const char* str) {
+        assign(str);
+        return *this;
+    }
+    
+    BoundedString& operator=(const std::string& str) {
+        assign(str.c_str(), str.length());
+        return *this;
+    }
+    
+    BoundedString& operator=(const BoundedString& other) {
+        if (this != &other) {
+            length_ = other.length_;
+            std::memcpy(data_.data(), other.data_.data(), length_ + 1);
+        }
+        return *this;
+    }
+    
+    // Integer assignment operators
+    BoundedString& operator=(uint32_t value) {
+        length_ = snprintf(data_.data(), MAX_LEN, "%u", value);
+        if (length_ >= MAX_LEN) length_ = MAX_LEN - 1;
+        data_[length_] = '\0';
+        return *this;
+    }
+    
+    BoundedString& operator=(int value) {
+        length_ = snprintf(data_.data(), MAX_LEN, "%d", value);
+        if (length_ >= MAX_LEN) length_ = MAX_LEN - 1;
+        data_[length_] = '\0';
+        return *this;
+    }
+    
+    BoundedString& operator=(uint64_t value) {
+        length_ = snprintf(data_.data(), MAX_LEN, "%llu", value);
+        if (length_ >= MAX_LEN) length_ = MAX_LEN - 1;
+        data_[length_] = '\0';
+        return *this;
+    }
+    
     bool operator==(const BoundedString& other) const noexcept {
         return length_ == other.length_ && 
                std::memcmp(data_.data(), other.data_.data(), length_) == 0;
@@ -125,14 +170,6 @@ public:
 private:
     std::array<char, MAX_LEN> data_{};
     size_t length_ = 0;
-};
-
-// Message validation utilities
-class MessageValidator {
-public:
-    static bool validate_message_size(size_t received, size_t expected_min, size_t expected_max) noexcept;
-    static bool sanitize_network_input(const void* data, size_t length) noexcept;
-    static bool validate_string_field(const char* str, size_t max_length) noexcept;
 };
 
 // RAII wrapper for file descriptors
@@ -218,3 +255,13 @@ private:
 };
 
 } // namespace rtes
+
+// Hash specialization for BoundedString
+namespace std {
+template<size_t N>
+struct hash<rtes::BoundedString<N>> {
+    size_t operator()(const rtes::BoundedString<N>& bs) const noexcept {
+        return hash<string_view>{}(string_view(bs.c_str(), bs.length()));
+    }
+};
+}

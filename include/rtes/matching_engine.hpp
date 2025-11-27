@@ -30,11 +30,33 @@ struct MarketDataEvent {
         } bbo;
     };
     
-    MarketDataEvent() = default;
+    MarketDataEvent() : type(TRADE), symbol{} { new (&trade) Trade(); }
     MarketDataEvent(const Trade& t) : type(TRADE) {
-        trade = t;
+        new (&trade) Trade(t);
         std::strncpy(symbol, t.symbol, sizeof(symbol));
     }
+    MarketDataEvent(const MarketDataEvent& other) : type(other.type) {
+        std::memcpy(symbol, other.symbol, sizeof(symbol));
+        if (type == TRADE) {
+            new (&trade) Trade(other.trade);
+        } else {
+            bbo = other.bbo;
+        }
+    }
+    MarketDataEvent& operator=(const MarketDataEvent& other) {
+        if (this != &other) {
+            if (type == TRADE) trade.~Trade();
+            type = other.type;
+            std::memcpy(symbol, other.symbol, sizeof(symbol));
+            if (type == TRADE) {
+                new (&trade) Trade(other.trade);
+            } else {
+                bbo = other.bbo;
+            }
+        }
+        return *this;
+    }
+    ~MarketDataEvent() { if (type == TRADE) trade.~Trade(); }
 };
 
 class MatchingEngine {

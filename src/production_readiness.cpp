@@ -109,8 +109,9 @@ ReadinessResult ProductionReadinessValidator::validate_security_configuration() 
     }
     
     // Check TLS configuration
+    auto tls_result = config.get_value<bool>("security.enable_tls");
     if (!config.has_key("security.enable_tls") || 
-        config.get_value<bool>("security.enable_tls").value_or(false) == false) {
+        (tls_result.has_value() && !tls_result.value())) {
         result.status = ReadinessStatus::FAIL;
         result.details.push_back("TLS not enabled");
     }

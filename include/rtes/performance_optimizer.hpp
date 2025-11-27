@@ -6,7 +6,9 @@
 #include <atomic>
 #include <array>
 #include <memory>
+#if defined(__x86_64__) || defined(_M_X64)
 #include <immintrin.h>
+#endif
 
 namespace rtes {
 
@@ -79,7 +81,7 @@ public:
     
     ~CompactAllocator() {
         for (auto* block : blocks_) {
-            std::aligned_alloc_free(block);
+            std::free(block);
         }
     }
     
@@ -138,8 +140,10 @@ struct OrderBookLevelsSOA {
     
     void prefetch_level(size_t index) const noexcept {
         if (index < size) {
+#if defined(__x86_64__) || defined(_M_X64)
             _mm_prefetch(&prices[index], _MM_HINT_T0);
             _mm_prefetch(&quantities[index], _MM_HINT_T0);
+#endif
         }
     }
 };

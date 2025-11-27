@@ -16,7 +16,7 @@ MonitoringService::MonitoringService(uint16_t port, Exchange* exchange)
     tcp_connections_ = METRICS_COUNTER("rtes_tcp_connections_total");
     udp_messages_ = METRICS_COUNTER("rtes_udp_messages_total");
     order_latency_ = METRICS_LATENCY_HISTOGRAM("rtes_order_latency_seconds");
-    queue_depth_ = METRICS_HISTOGRAM("rtes_queue_depth", {1, 5, 10, 50, 100, 500, 1000, 5000});
+    queue_depth_ = METRICS_LATENCY_HISTOGRAM("rtes_queue_depth");
     
     setup_http_handlers();
 }

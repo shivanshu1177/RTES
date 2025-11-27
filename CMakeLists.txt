@@ -13,6 +13,15 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address,undefined -fno-omit-frame-p
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 
+# Optional OpenSSL support
+find_package(OpenSSL QUIET)
+if(OPENSSL_FOUND)
+    message(STATUS "OpenSSL found - building with TLS support")
+else()
+    message(WARNING "OpenSSL not found - building without TLS support")
+    add_compile_definitions(RTES_NO_OPENSSL)
+endif()
+
 # Include directories
 include_directories(include)
 
@@ -21,6 +30,9 @@ file(GLOB_RECURSE CORE_SOURCES "src/*.cpp")
 list(REMOVE_ITEM CORE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 add_library(rtes_core ${CORE_SOURCES})
 target_link_libraries(rtes_core Threads::Threads)
+if(OPENSSL_FOUND)
+    target_link_libraries(rtes_core OpenSSL::SSL OpenSSL::Crypto)
+endif()
 
 # Main executable
 add_executable(trading_exchange src/main.cpp)

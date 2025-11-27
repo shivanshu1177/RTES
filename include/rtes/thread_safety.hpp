@@ -44,22 +44,28 @@ public:
         auto tid = std::this_thread::get_id();
         
         // Check for potential deadlocks
-        std::apply([tid](auto&... mtx) {
+        std::apply([this, tid](auto&... mtx) {
             ((check_deadlock(tid, &mtx)), ...);
         }, mutexes_);
         
         // Acquire locks in consistent order
-        std::lock(mutexes...);
+        std::apply([](auto&... mtx) {
+            if constexpr (sizeof...(mtx) == 1) {
+                (mtx.lock(), ...);
+            } else {
+                std::lock(mtx...);
+            }
+        }, mutexes_);
         
         // Register acquisitions
-        std::apply([tid](auto&... mtx) {
+        std::apply([this, tid](auto&... mtx) {
             ((register_acquisition(tid, &mtx)), ...);
         }, mutexes_);
     }
     
     ~scoped_lock() {
         auto tid = std::this_thread::get_id();
-        std::apply([tid](auto&... mtx) {
+        std::apply([this, tid](auto&... mtx) {
             ((register_release(tid, &mtx)), ...);
         }, mutexes_);
     }
@@ -114,6 +120,15 @@ public:
                                 std::memory_order success = std::memory_order_seq_cst,
                                 std::memory_order failure = std::memory_order_seq_cst) {
         return value_.compare_exchange_strong(expected, desired, success, failure);
+    }
+    
+    // Conversion operators for contextual and implicit conversion
+    explicit operator bool() const requires std::is_same_v<T, bool> {
+        return load();
+    }
+    
+    operator T() const {
+        return load();
     }
 
 private:
@@ -170,16 +185,16 @@ public:
     
     void add_work_item(std::function<void()> work) {
         std::unique_lock lock(work_mutex_);
-        if (draining_) return;
+        if (draining_.load()) return;
         work_queue_.push_back(std::move(work));
         work_cv_.notify_one();
     }
     
     void process_work() {
         std::unique_lock lock(work_mutex_);
-        work_cv_.wait(lock, [this] { return !work_queue_.empty() || draining_; });
+        work_cv_.wait(lock, [this] { return !work_queue_.empty() || draining_.load(); });
         
-        while (!work_queue_.empty() && !draining_) {
+        while (!work_queue_.empty() && !draining_.load()) {
             auto work = std::move(work_queue_.front());
             work_queue_.pop_front();
             lock.unlock();

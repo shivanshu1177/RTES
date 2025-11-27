@@ -23,6 +23,10 @@ public:
     uint64_t orders_acked() const { return orders_acked_.load(); }
     uint64_t orders_rejected() const { return orders_rejected_.load(); }
     uint64_t trades_received() const { return trades_received_.load(); }
+    
+    // Order management (public for testing tools)
+    bool send_new_order(const std::string& symbol, Side side, uint64_t quantity, uint64_t price);
+    bool send_cancel_order(uint64_t order_id, const std::string& symbol);
 
 protected:
     std::string host_;
@@ -47,10 +51,6 @@ protected:
     virtual void on_order_ack(const OrderAckMessage& ack) {}
     virtual void on_trade(const TradeMessage& trade) {}
     virtual void on_stop() {}
-    
-    // Order management
-    bool send_new_order(const std::string& symbol, Side side, uint64_t quantity, uint64_t price);
-    bool send_cancel_order(uint64_t order_id, const std::string& symbol);
     
     // Utility methods
     uint64_t generate_order_id() { return next_order_id_++; }

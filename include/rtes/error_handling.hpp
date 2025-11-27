@@ -35,11 +35,36 @@ enum class ErrorCode {
     ORDER_DUPLICATE,
     ORDER_NOT_FOUND,
     RISK_LIMIT_EXCEEDED,
+    INVALID_CONFIGURATION,
+    INVALID_ARGUMENT,
     
     // System errors
     SYSTEM_SHUTDOWN = 5000,
     SYSTEM_OVERLOAD,
-    SYSTEM_CORRUPTED_STATE
+    SYSTEM_CORRUPTED_STATE,
+    
+    // Deployment errors
+    DEPLOYMENT_ALREADY_ACTIVE = 6000,
+    DEPLOYMENT_FAILED,
+    DEPLOYMENT_ROLLBACK_FAILED,
+    
+    // Encryption errors
+    ENCRYPTION_FAILED = 7000,
+    DECRYPTION_FAILED,
+    ENCRYPTION_KEY_NOT_FOUND,
+    
+    // Config errors
+    CONFIG_KEY_NOT_FOUND = 8000,
+    CONFIG_PARSE_ERROR,
+    CONFIG_TYPE_MISMATCH,
+    CONFIG_FILE_NOT_FOUND,
+    INVALID_ENVIRONMENT,
+    
+    // Health check errors
+    HEALTH_CHECK_FAILED = 9000,
+    BACKUP_FAILED,
+    BACKUP_VERIFICATION_FAILED,
+    CONFIG_VALIDATION_FAILED
 };
 
 class ErrorCategory : public std::error_category {
@@ -76,11 +101,11 @@ public:
     const std::error_code& error() const { return error_; }
     
     template<typename F>
-    auto map(F&& func) -> Result<decltype(func(value_))> {
+    auto map(F&& func) -> Result<decltype(func(std::declval<T>()))> {
         if (has_value_) {
-            return Result<decltype(func(value_))>(func(value_));
+            return Result<decltype(func(std::declval<T>()))>(func(value_));
         }
-        return Result<decltype(func(value_))>(error_);
+        return Result<decltype(func(std::declval<T>()))>(error_);
     }
     
     template<typename F>

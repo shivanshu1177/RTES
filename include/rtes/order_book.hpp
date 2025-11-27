@@ -4,6 +4,7 @@
 #include "rtes/memory_pool.hpp"
 #include "rtes/error_handling.hpp"
 #include "rtes/thread_safety.hpp"
+#include "rtes/performance_optimizer.hpp"
 #include <map>
 #include <deque>
 #include <unordered_map>

@@ -30,6 +30,16 @@
 #include "rtes/thread_safety.hpp"
 #include <algorithm>
 
+// Portable prefetch macro
+#if defined(__x86_64__) || defined(_M_X64)
+#include <immintrin.h>
+#define PREFETCH(addr, hint) _mm_prefetch((const char*)(addr), hint)
+#define PREFETCH_HINT_T0 _MM_HINT_T0
+#else
+#define PREFETCH(addr, hint) ((void)0)
+#define PREFETCH_HINT_T0 0
+#endif
+
 namespace rtes {
 
 /**
@@ -225,16 +235,17 @@ void OrderBook::match_order(Order* order) {
 Result<void> OrderBook::match_market_order_safe_optimized(Order* order) {
     try {
         // Select opposite side: buy orders match against asks, sell against bids
-        auto& opposite_side = (order->side == Side::BUY) ? asks_ : bids_;
+        if (order->side == Side::BUY) {
+            auto& opposite_side = asks_;
         
         // PERFORMANCE: Prefetch first few price levels into L1 cache
         // This reduces cache miss latency from ~80ns to ~4ns
         auto it = opposite_side.begin();
         if (it != opposite_side.end()) {
-            _mm_prefetch(&it->second, _MM_HINT_T0);  // Prefetch to L1 cache
+            PREFETCH(&it->second, PREFETCH_HINT_T0);  // Prefetch to L1 cache
             auto next_it = std::next(it);
             if (next_it != opposite_side.end()) {
-                _mm_prefetch(&next_it->second, _MM_HINT_T0);  // Prefetch next level
+                PREFETCH(&next_it->second, PREFETCH_HINT_T0);  // Prefetch next level
             }
         }
         
@@ -254,7 +265,7 @@ Result<void> OrderBook::match_market_order_safe_optimized(Order* order) {
             // PERFORMANCE: Prefetch next order in queue before processing current
             // Reduces pipeline stalls when accessing next order
             if (level.orders.size() > 1) {
-                _mm_prefetch(level.orders[1], _MM_HINT_T0);
+                PREFETCH(level.orders[1], PREFETCH_HINT_T0);
             }
             
             // Calculate trade quantity (minimum of both orders)
@@ -277,7 +288,62 @@ Result<void> OrderBook::match_market_order_safe_optimized(Order* order) {
                 opposite_side.erase(opposite_side.begin());  // O(log n) map erase
             }
         }
-        return Result<void>();
+            return Result<void>();
+        } else {
+            auto& opposite_side = bids_;
+        
+        // PERFORMANCE: Prefetch first few price levels into L1 cache
+        // This reduces cache miss latency from ~80ns to ~4ns
+        auto it = opposite_side.begin();
+        if (it != opposite_side.end()) {
+            PREFETCH(&it->second, PREFETCH_HINT_T0);  // Prefetch to L1 cache
+            auto next_it = std::next(it);
+            if (next_it != opposite_side.end()) {
+                PREFETCH(&next_it->second, PREFETCH_HINT_T0);  // Prefetch next level
+            }
+        }
+        
+        // Walk through price levels until order filled or book exhausted
+        while (order->remaining_quantity > 0 && !opposite_side.empty()) {
+            auto& [price, level] = *opposite_side.begin();  // Best price level
+            
+            // Skip empty price levels (cleanup from previous trades)
+            if (level.orders.empty()) {
+                opposite_side.erase(opposite_side.begin());
+                continue;
+            }
+            
+            // Get first order at this price level (FIFO - time priority)
+            Order* passive_order = level.orders.front();
+            
+            // PERFORMANCE: Prefetch next order in queue before processing current
+            // Reduces pipeline stalls when accessing next order
+            if (level.orders.size() > 1) {
+                PREFETCH(level.orders[1], PREFETCH_HINT_T0);
+            }
+            
+            // Calculate trade quantity (minimum of both orders)
+            Quantity trade_qty = std::min(order->remaining_quantity, passive_order->remaining_quantity);
+            
+            // Execute trade (updates quantities, creates Trade object)
+            execute_trade_optimized(order, passive_order, trade_qty, price);
+            
+            // If passive order fully filled, remove from book
+            if (passive_order->remaining_quantity == 0) {
+                level.orders.pop_front();  // O(1) deque operation
+                level.total_quantity -= passive_order->quantity;
+                order_lookup_.erase(passive_order->id);  // O(1) hash map erase
+                passive_order->status = OrderStatus::FILLED;
+                pool_.deallocate(passive_order);  // Return to memory pool
+            }
+            
+            // Remove empty price level from book
+            if (level.orders.empty()) {
+                opposite_side.erase(opposite_side.begin());  // O(log n) map erase
+            }
+        }
+            return Result<void>();
+        }
     } catch (const std::exception& e) {
         LOG_ERROR_SAFE("Exception in match_market_order: {}", e.what());
         return ErrorCode::SYSTEM_CORRUPTED_STATE;
@@ -310,12 +376,13 @@ void OrderBook::match_market_order(Order* order) {
  */
 Result<void> OrderBook::match_limit_order_safe_optimized(Order* order) {
     try {
-        auto& opposite_side = (order->side == Side::BUY) ? asks_ : bids_;
+        if (order->side == Side::BUY) {
+            auto& opposite_side = asks_;
         
         // PERFORMANCE: Prefetch best price level into L1 cache
         auto it = opposite_side.begin();
         if (it != opposite_side.end()) {
-            _mm_prefetch(&it->second, _MM_HINT_T0);
+            PREFETCH(&it->second, PREFETCH_HINT_T0);
         }
         
         // Match while order has quantity and price crosses
@@ -337,7 +404,7 @@ Result<void> OrderBook::match_limit_order_safe_optimized(Order* order) {
             
             // PERFORMANCE: Prefetch next order for pipeline efficiency
             if (level.orders.size() > 1) {
-                _mm_prefetch(level.orders[1], _MM_HINT_T0);
+                PREFETCH(level.orders[1], PREFETCH_HINT_T0);
             }
             
             Quantity trade_qty = std::min(order->remaining_quantity, passive_order->remaining_quantity);
@@ -357,7 +424,57 @@ Result<void> OrderBook::match_limit_order_safe_optimized(Order* order) {
                 opposite_side.erase(opposite_side.begin());
             }
         }
-        return Result<void>();
+            return Result<void>();
+        } else {
+            auto& opposite_side = bids_;
+        
+        // PERFORMANCE: Prefetch best price level into L1 cache
+        auto it = opposite_side.begin();
+        if (it != opposite_side.end()) {
+            PREFETCH(&it->second, PREFETCH_HINT_T0);
+        }
+        
+        // Match while order has quantity and price crosses
+        while (order->remaining_quantity > 0 && !opposite_side.empty()) {
+            auto& [price, level] = *opposite_side.begin();
+            
+            // CRITICAL: Check if limit price crosses with best available price
+            // Buy: willing to pay order.price, available at 'price' -> crosses if order.price >= price
+            // Sell: willing to sell at order.price, buyer at 'price' -> crosses if order.price <= price
+            bool crosses = (order->side == Side::BUY) ? (order->price >= price) : (order->price <= price);
+            if (!crosses) break;  // Stop matching, rest of order goes to book
+            
+            if (level.orders.empty()) {
+                opposite_side.erase(opposite_side.begin());
+                continue;
+            }
+            
+            Order* passive_order = level.orders.front();
+            
+            // PERFORMANCE: Prefetch next order for pipeline efficiency
+            if (level.orders.size() > 1) {
+                PREFETCH(level.orders[1], PREFETCH_HINT_T0);
+            }
+            
+            Quantity trade_qty = std::min(order->remaining_quantity, passive_order->remaining_quantity);
+            
+            // Execute at passive order's price (price-time priority)
+            execute_trade_optimized(order, passive_order, trade_qty, price);
+            
+            if (passive_order->remaining_quantity == 0) {
+                level.orders.pop_front();
+                level.total_quantity -= passive_order->quantity;
+                order_lookup_.erase(passive_order->id);
+                passive_order->status = OrderStatus::FILLED;
+                pool_.deallocate(passive_order);
+            }
+            
+            if (level.orders.empty()) {
+                opposite_side.erase(opposite_side.begin());
+            }
+        }
+            return Result<void>();
+        }
     } catch (const std::exception& e) {
         LOG_ERROR_SAFE("Exception in match_limit_order: {}", e.what());
         return ErrorCode::SYSTEM_CORRUPTED_STATE;
@@ -393,8 +510,8 @@ void OrderBook::execute_trade_optimized(Order* aggressive_order, Order* passive_
     
     // PERFORMANCE: Prefetch order structures into L1 cache before accessing
     // Reduces cache miss penalty when updating order fields
-    _mm_prefetch(aggressive_order, _MM_HINT_T0);
-    _mm_prefetch(passive_order, _MM_HINT_T0);
+    PREFETCH(aggressive_order, PREFETCH_HINT_T0);
+    PREFETCH(passive_order, PREFETCH_HINT_T0);
     
     // Update order quantities (atomic operation not needed - protected by mutex)
     aggressive_order->remaining_quantity -= quantity;
@@ -430,19 +547,35 @@ Result<void> OrderBook::add_to_book_safe(Order* order) {
     if (!order) return ErrorCode::ORDER_INVALID;
     
     try {
-        auto& side = (order->side == Side::BUY) ? bids_ : asks_;
+        if (order->side == Side::BUY) {
+            auto& side = bids_;
         
-        auto it = side.find(order->price);
-        if (it == side.end()) {
-            auto [inserted_it, success] = side.emplace(order->price, PriceLevel(order->price));
-            if (!success) return ErrorCode::SYSTEM_CORRUPTED_STATE;
-            it = inserted_it;
+            auto it = side.find(order->price);
+            if (it == side.end()) {
+                auto [inserted_it, success] = side.emplace(order->price, PriceLevel(order->price));
+                if (!success) return ErrorCode::SYSTEM_CORRUPTED_STATE;
+                it = inserted_it;
+            }
+            
+            it->second.orders.push_back(order);
+            it->second.total_quantity += order->remaining_quantity;
+            order->status = OrderStatus::ACCEPTED;
+            return Result<void>();
+        } else {
+            auto& side = asks_;
+        
+            auto it = side.find(order->price);
+            if (it == side.end()) {
+                auto [inserted_it, success] = side.emplace(order->price, PriceLevel(order->price));
+                if (!success) return ErrorCode::SYSTEM_CORRUPTED_STATE;
+                it = inserted_it;
+            }
+            
+            it->second.orders.push_back(order);
+            it->second.total_quantity += order->remaining_quantity;
+            order->status = OrderStatus::ACCEPTED;
+            return Result<void>();
         }
-        
-        it->second.orders.push_back(order);
-        it->second.total_quantity += order->remaining_quantity;
-        order->status = OrderStatus::ACCEPTED;
-        return Result<void>();
     } catch (const std::exception& e) {
         LOG_ERROR_SAFE("Exception in add_to_book: {}", e.what());
         return ErrorCode::SYSTEM_CORRUPTED_STATE;
@@ -455,21 +588,41 @@ bool OrderBook::add_to_book(Order* order) {
 }
 
 void OrderBook::remove_order_from_book(Order* order) {
-    auto& side = (order->side == Side::BUY) ? bids_ : asks_;
+    if (order->side == Side::BUY) {
+        auto& side = bids_;
     
-    auto level_it = side.find(order->price);
-    if (level_it == side.end()) return;
-    
-    auto& level = level_it->second;
-    auto order_it = std::find(level.orders.begin(), level.orders.end(), order);
-    
-    if (order_it != level.orders.end()) {
-        level.orders.erase(order_it);
-        level.total_quantity -= order->remaining_quantity;
+        auto level_it = side.find(order->price);
+        if (level_it == side.end()) return;
         
-        // Remove empty price level
-        if (level.orders.empty()) {
-            side.erase(level_it);
+        auto& level = level_it->second;
+        auto order_it = std::find(level.orders.begin(), level.orders.end(), order);
+        
+        if (order_it != level.orders.end()) {
+            level.orders.erase(order_it);
+            level.total_quantity -= order->remaining_quantity;
+            
+            // Remove empty price level
+            if (level.orders.empty()) {
+                side.erase(level_it);
+            }
+        }
+    } else {
+        auto& side = asks_;
+    
+        auto level_it = side.find(order->price);
+        if (level_it == side.end()) return;
+        
+        auto& level = level_it->second;
+        auto order_it = std::find(level.orders.begin(), level.orders.end(), order);
+        
+        if (order_it != level.orders.end()) {
+            level.orders.erase(order_it);
+            level.total_quantity -= order->remaining_quantity;
+            
+            // Remove empty price level
+            if (level.orders.empty()) {
+                side.erase(level_it);
+            }
         }
     }
 }
@@ -524,7 +677,7 @@ void OrderBook::shutdown() {
     bids_.clear();
     asks_.clear();
     
-    LOG_INFO("OrderBook {} shutdown complete", symbol_);
+    LOG_INFO_SAFE("OrderBook {} shutdown complete", symbol_);
 }
 
 } // namespace rtes

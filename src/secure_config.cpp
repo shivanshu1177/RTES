@@ -141,7 +141,7 @@ Result<void> SecureConfigManager::load_config(const std::string& config_path, En
     auto validate_result = validate_configuration();
     if (validate_result.has_error()) return validate_result;
     
-    LOG_INFO("Configuration loaded successfully for environment: {}", 
+    LOG_INFO_SAFE("Configuration loaded successfully for environment: {}", 
              static_cast<int>(environment_));
     
     return Result<void>();
@@ -246,7 +246,7 @@ Result<void> SecureConfigManager::load_environment_overrides() {
         const char* env_value = std::getenv(env_key.c_str());
         if (env_value) {
             config_data_[key] = env_value;
-            LOG_INFO("Override from environment: {} = {}", key, env_value);
+            LOG_INFO_SAFE("Override from environment: {} = {}", key, env_value);
         }
     }
     
@@ -261,7 +261,7 @@ Result<void> SecureConfigManager::validate_configuration() {
     
     for (const auto& key : required_keys) {
         if (config_data_.find(key) == config_data_.end()) {
-            LOG_ERROR("Required configuration key missing: {}", key);
+            LOG_ERROR_SAFE("Required configuration key missing: {}", key);
             return ErrorCode::CONFIG_VALIDATION_FAILED;
         }
     }
@@ -275,7 +275,7 @@ void SecureConfigManager::notify_callbacks(const std::string& key, const std::st
         try {
             it->second(value);
         } catch (const std::exception& e) {
-            LOG_ERROR("Configuration callback failed for key {}: {}", key, e.what());
+            LOG_ERROR_SAFE("Configuration callback failed for key {}: {}", key, e.what());
         }
     }
 }
@@ -391,7 +391,7 @@ HealthCheckManager::HealthStatus HealthCheckManager::run_check(const HealthCheck
     try {
         return check.check_fn();
     } catch (const std::exception& e) {
-        LOG_ERROR("Health check '{}' failed with exception: {}", check.name, e.what());
+        LOG_ERROR_SAFE("Health check '{}' failed with exception: {}", check.name, e.what());
         return HealthStatus::UNHEALTHY;
     }
 }
@@ -417,14 +417,14 @@ void EmergencyShutdown::initiate_emergency_shutdown(const std::string& reason) {
         return; // Already shutting down
     }
     
-    LOG_CRITICAL("EMERGENCY SHUTDOWN INITIATED: {}", reason);
+    LOG_ERROR_SAFE("EMERGENCY SHUTDOWN INITIATED: {}", reason);
     
     std::lock_guard lock(shutdown_mutex_);
     for (const auto& handler : handlers_) {
         try {
             handler();
         } catch (const std::exception& e) {
-            LOG_ERROR("Emergency shutdown handler failed: {}", e.what());
+            LOG_ERROR_SAFE("Emergency shutdown handler failed: {}", e.what());
         }
     }
 }
@@ -459,7 +459,7 @@ void EmergencyShutdown::monitor_loop() {
                         return;
                     }
                 } catch (const std::exception& e) {
-                    LOG_ERROR("Emergency trigger '{}' failed: {}", name, e.what());
+                    LOG_ERROR_SAFE("Emergency trigger '{}' failed: {}", name, e.what());
                 }
             }
         }

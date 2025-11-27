@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rtes/thread_safety.hpp"
+#include "rtes/logger.hpp"
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -11,15 +12,7 @@
 
 namespace rtes {
 
-// Structured logging
-enum class LogLevel {
-    TRACE = 0,
-    DEBUG = 1,
-    INFO = 2,
-    WARN = 3,
-    ERROR = 4,
-    CRITICAL = 5
-};
+// Use LogLevel from logger.hpp
 
 struct LogEntry {
     std::chrono::system_clock::time_point timestamp;
@@ -46,7 +39,7 @@ public:
 private:
     mutable std::shared_mutex logger_mutex_;
     std::unordered_map<std::string, std::string> global_fields_ GUARDED_BY(logger_mutex_);
-    thread_local std::string current_trace_id_;
+    inline static thread_local std::string current_trace_id_;
     atomic_wrapper<bool> json_format_{true};
     
     std::string format_log_entry(const LogEntry& entry) const;

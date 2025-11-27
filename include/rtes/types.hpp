@@ -63,6 +63,9 @@ struct Trade {
     Price price;
     std::chrono::steady_clock::time_point timestamp;
     
+    Trade() : id(0), buy_order_id(0), sell_order_id(0), quantity(0), price(0), 
+              timestamp(std::chrono::steady_clock::now()) {}
+    
     Trade(TradeID id, OrderID buy_id, OrderID sell_id, const char* sym, 
           Quantity qty, Price p)
         : id(id), buy_order_id(buy_id), sell_order_id(sell_id), 

@@ -1,4 +1,5 @@
 #include "rtes/input_validation.hpp"
+#include "rtes/error_handling.hpp"
 #include "rtes/logger.hpp"
 #include "rtes/thread_safety.hpp"
 #include <algorithm>
@@ -13,17 +14,14 @@ const std::unordered_set<uint32_t> MessageValidator::VALID_MESSAGE_TYPES = {
 };
 
 Result<void> MessageValidator::validate_message_header(const MessageHeader& header) {
-    // Validate message type
     if (!is_valid_message_type(header.type)) {
         return make_error_code(ValidationError::INVALID_MESSAGE_TYPE);
     }
     
-    // Validate message size
     if (!is_valid_message_size(header.length, static_cast<MessageType>(header.type))) {
         return make_error_code(ValidationError::INVALID_MESSAGE_SIZE);
     }
     
-    // Validate sequence number (should be non-zero)
     if (header.sequence == 0) {
         return make_error_code(ValidationError::INVALID_FIELD_VALUE);
     }
@@ -44,7 +42,7 @@ Result<void> MessageValidator::validate_message_payload(const void* payload, siz
         case TRADE_REPORT: expected_size = sizeof(TradeMessage) - sizeof(MessageHeader); break;
         case HEARTBEAT: expected_size = sizeof(HeartbeatMessage) - sizeof(MessageHeader); break;
         default: 
-            LOG_ERROR("Invalid message type: {}", static_cast<uint32_t>(type));
+            LOG_ERROR_SAFE("Invalid message type: {}", static_cast<uint32_t>(type));
             return make_error_code(ValidationError::INVALID_MESSAGE_TYPE);
     }
     
@@ -56,36 +54,30 @@ Result<void> MessageValidator::validate_message_payload(const void* payload, siz
 }
 
 Result<void> MessageValidator::sanitize_message_fields(NewOrderMessage& message) {
-    // Validate order ID (non-zero)
     if (message.order_id == 0) {
         return make_error_code(ValidationError::INVALID_FIELD_VALUE);
     }
     
-    // Sanitize and validate symbol
     std::string symbol_str = message.symbol.c_str();
     symbol_str = FieldValidators::sanitize_symbol(symbol_str);
     if (symbol_str.empty() || symbol_str.length() > 7) {
         return make_error_code(ValidationError::INVALID_FIELD_FORMAT);
     }
-    message.symbol.assign(symbol_str);
+    message.symbol.assign(symbol_str.c_str());
     
-    // Validate side
     if (message.side != static_cast<uint8_t>(Side::BUY) && 
         message.side != static_cast<uint8_t>(Side::SELL)) {
         return make_error_code(ValidationError::INVALID_FIELD_VALUE);
     }
     
-    // Validate quantity (positive)
     if (message.quantity == 0 || message.quantity > 1000000) {
         return make_error_code(ValidationError::INVALID_FIELD_RANGE);
     }
     
-    // Validate price (positive for limit orders)
     if (message.order_type == static_cast<uint8_t>(OrderType::LIMIT) && message.price == 0) {
         return make_error_code(ValidationError::INVALID_FIELD_VALUE);
     }
     
-    // Validate order type
     if (message.order_type != static_cast<uint8_t>(OrderType::MARKET) &&
         message.order_type != static_cast<uint8_t>(OrderType::LIMIT)) {
         return make_error_code(ValidationError::INVALID_FIELD_VALUE);
@@ -104,7 +96,7 @@ Result<void> MessageValidator::sanitize_message_fields(CancelOrderMessage& messa
     if (symbol_str.empty()) {
         return make_error_code(ValidationError::INVALID_FIELD_FORMAT);
     }
-    message.symbol.assign(symbol_str);
+    message.symbol.assign(symbol_str.c_str());
     
     return Result<void>();
 }
@@ -120,7 +112,7 @@ Result<void> MessageValidator::sanitize_message_fields(OrderAckMessage& message)
     
     std::string reason_str = message.reason.c_str();
     reason_str = InputSanitizer::sanitize_network_input(reason_str);
-    message.reason.assign(reason_str);
+    message.reason.assign(reason_str.c_str());
     
     return Result<void>();
 }
@@ -142,7 +134,7 @@ bool MessageValidator::is_valid_message_size(uint32_t size, MessageType type) {
         case TRADE_REPORT: expected_size = sizeof(TradeMessage); break;
         case HEARTBEAT: expected_size = sizeof(HeartbeatMessage); break;
         default: 
-            LOG_ERROR("Unknown message type in size validation: {}", static_cast<uint32_t>(type));
+            LOG_ERROR_SAFE("Unknown message type in size validation: {}", static_cast<uint32_t>(type));
             return false;
     }
     
@@ -161,7 +153,6 @@ Result<void> ConfigurationValidator::validate_full_config(const Config& config) 
 }
 
 Result<void> ConfigurationValidator::validate_config_schema(const Config& config) {
-    // Validate required sections exist
     if (config.exchange.name.empty()) {
         return make_error_code(ValidationError::MISSING_REQUIRED_FIELD);
     }
@@ -187,14 +178,12 @@ Result<void> ConfigurationValidator::validate_config_values(const Config& config
 }
 
 Result<void> ConfigurationValidator::validate_config_dependencies(const Config& config) {
-    // Validate port conflicts
     if (config.exchange.tcp_port == config.exchange.udp_port ||
         config.exchange.tcp_port == config.exchange.metrics_port ||
         config.exchange.udp_port == config.exchange.metrics_port) {
         return make_error_code(ValidationError::INVALID_CONFIGURATION);
     }
     
-    // Validate performance vs risk settings
     if (config.performance.order_pool_size < config.risk.max_orders_per_second * 10) {
         LOG_WARN("Order pool size may be too small for configured order rate");
     }
@@ -209,7 +198,6 @@ Result<void> ConfigurationValidator::validate_exchange_config(const ExchangeConf
         return make_error_code(ValidationError::INVALID_FIELD_RANGE);
     }
     
-    // Validate multicast group format (basic check)
     if (config.udp_multicast_group.empty() || 
         config.udp_multicast_group.find('.') == std::string::npos) {
         return make_error_code(ValidationError::INVALID_FIELD_FORMAT);
@@ -241,131 +229,6 @@ Result<void> ConfigurationValidator::validate_performance_config(const Performan
     
     if (config.queue_capacity == 0 || config.queue_capacity > 1000000) {
         return make_error_code(ValidationError::INVALID_FIELD_RANGE);
-    }
-    
-    return Result<void>();
-}
-
-Result<void> ConfigurationValidator::validate_symbol_configs(const std::vector<SymbolConfig>& symbols) {
-    for (const auto& symbol : symbols) {
-        std::string clean_symbol = FieldValidators::sanitize_symbol(symbol.name);
-        if (clean_symbol.empty() || clean_symbol.length() > 8) {
-            return make_error_code(ValidationError::INVALID_FIELD_FORMAT);
-        }
-        
-        if (symbol.tick_size <= 0 || symbol.lot_size <= 0) {
-            return make_error_code(ValidationError::INVALID_FIELD_VALUE);
-        }
-    }
-    
-    return Result<void>();
-}
-
-// FieldValidators implementation
-bool FieldValidators::validate_port_range(uint16_t port) {
-    return port >= 1024 && port <= 65535;
-}
-
-std::string FieldValidators::sanitize_symbol(const std::string& symbol) {
-    std::string result;
-    result.reserve(symbol.length());
-    
-    for (char c : symbol) {
-        if (std::isalnum(c) || c == '.' || c == '-') {
-            result += std::toupper(c);
-        }
-    }
-    
-    return result;
-}
-
-bool FieldValidators::validate_price(double price) {
-    return price > 0.0 && price < 1000000.0 && std::isfinite(price);
-}
-
-bool FieldValidators::validate_quantity(uint64_t quantity) {
-    return quantity > 0 && quantity <= 10000000;
-}
-
-// ValidationChain implementation
-ValidationChain& ValidationChain::add_validator(std::function<Result<void>()> validator) {
-    validators_.push_back(std::move(validator));
-    return *this;
-}
-
-Result<void> ValidationChain::validate() {
-    for (const auto& validator : validators_) {
-        auto result = validator();
-        if (result.has_error()) {
-            return result;
-        }
-    }
-    return Result<void>();capacity > 1000000) {
-        return make_error_code(ValidationError::INVALID_FIELD_RANGE);
-    }
-    
-    if (config.udp_buffer_size < 1024 || config.udp_buffer_size > 1048576) {
-        return make_error_code(ValidationError::INVALID_FIELD_RANGE);
-    }
-    
-    return Result<void>();
-}
-
-Result<void> ConfigurationValidator::validate_symbol_configs(const std::vector<SymbolConfig>& symbols) {
-    for (const auto& symbol : symbols) {
-        std::string clean_symbol = FieldValidators::sanitize_symbol(symbol.name);
-        if (clean_symbol.empty() || clean_symbol.length() > 8) {
-            return make_error_code(ValidationError::INVALID_FIELD_FORMAT);
-        }
-        
-        if (symbol.tick_size <= 0 || symbol.lot_size <= 0) {
-            return make_error_code(ValidationError::INVALID_FIELD_VALUE);
-        }
-    }
-    
-    return Result<void>();
-}
-
-// FieldValidators implementation
-bool FieldValidators::validate_port_range(uint16_t port) {
-    return port >= 1024 && port <= 65535;
-}
-
-std::string FieldValidators::sanitize_symbol(const std::string& symbol) {
-    std::string result;
-    result.reserve(symbol.length());
-    
-    for (char c : symbol) {
-        if (std::isalnum(c) || c == '.' || c == '-') {
-            result += std::toupper(c);
-        }
-    }
-    
-    return result;
-}
-
-bool FieldValidators::validate_price(double price) {
-    return price > 0.0 && price < 1000000.0 && std::isfinite(price);
-}
-
-bool FieldValidators::validate_quantity(uint64_t quantity) {
-    return quantity > 0 && quantity <= 10000000;
-}
-
-// ValidationChain implementation
-ValidationChain& ValidationChain::add_validator(std::function<Result<void>()> validator) {
-    validators_.push_back(std::move(validator));
-    return *this;
-}
-
-Result<void> ValidationChain::validate() {
-    for (const auto& validator : validators_) {
-        auto result = validator();
-        if (result.has_error()) {
-            return result;
-        }
-    }
-    return Result<void>();LD_RANGE);
     }
     
     return Result<void>();
@@ -492,7 +355,6 @@ ValidationChain& ValidationChain::add_custom_validator(std::function<Result<void
 }
 
 Result<void> ValidationChain::validate(const std::unordered_map<std::string, std::string>& fields) {
-    // Validate individual fields
     for (const auto& [field_name, field_rules] : rules_) {
         auto field_it = fields.find(field_name);
         if (field_it == fields.end()) {
@@ -507,7 +369,6 @@ Result<void> ValidationChain::validate(const std::unordered_map<std::string, std
         }
     }
     
-    // Run custom validators
     for (const auto& validator : custom_validators_) {
         auto result = validator();
         if (result.has_error()) {
@@ -516,6 +377,10 @@ Result<void> ValidationChain::validate(const std::unordered_map<std::string, std
     }
     
     return Result<void>();
+}
+
+Result<void> ValidationChain::validate_early_reject() {
+    return validate(std::unordered_map<std::string, std::string>{});
 }
 
 // InputSanitizer implementation
@@ -539,6 +404,14 @@ std::string InputSanitizer::sanitize_network_input(const std::string& input) {
     return normalize_whitespace(result);
 }
 
+std::string InputSanitizer::sanitize_config_value(const std::string& value) {
+    return sanitize_network_input(value);
+}
+
+std::string InputSanitizer::sanitize_log_input(const std::string& input) {
+    return remove_control_chars(input);
+}
+
 std::string InputSanitizer::remove_control_chars(const std::string& input) {
     std::string result;
     result.reserve(input.size());
@@ -547,6 +420,20 @@ std::string InputSanitizer::remove_control_chars(const std::string& input) {
         if (!CONTROL_CHARS.contains(c) && (c >= 0x20 || c == '\t' || c == '\n' || c == '\r')) {
             result += c;
         }
+    }
+    
+    return result;
+}
+
+std::string InputSanitizer::escape_special_chars(const std::string& input) {
+    std::string result;
+    result.reserve(input.size() * 2);
+    
+    for (char c : input) {
+        if (DANGEROUS_CHARS.contains(c)) {
+            result += '\\';
+        }
+        result += c;
     }
     
     return result;
@@ -569,12 +456,10 @@ std::string InputSanitizer::normalize_whitespace(const std::string& input) {
         }
     }
     
-    // Trim leading space
     if (!result.empty() && result.front() == ' ') {
         result.erase(0, 1);
     }
     
-    // Trim trailing space
     if (!result.empty() && result.back() == ' ') {
         result.pop_back();
     }
@@ -585,11 +470,6 @@ std::string InputSanitizer::normalize_whitespace(const std::string& input) {
 } // namespace rtes
 
 // Make ValidationError compatible with std::error_code
-namespace std {
-template<>
-struct is_error_code_enum<rtes::ValidationError> : true_type {};
-}
-
 namespace rtes {
 std::error_code make_error_code(ValidationError ve) {
     static class : public std::error_category {

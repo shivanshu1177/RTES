@@ -13,7 +13,12 @@
 #include <unordered_map>
 #include <mutex>
 #include <sys/socket.h>
+#ifdef __APPLE__
+#include <sys/event.h>
+#define EPOLL_EVENTS_SIZE 64
+#else
 #include <sys/epoll.h>
+#endif
 
 namespace rtes {
 

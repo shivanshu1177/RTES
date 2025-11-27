@@ -22,6 +22,7 @@ public:
     static Logger& instance();
     
     void set_level(LogLevel level);
+    LogLevel getLevel() const { return level_.load(); }
     void set_rate_limit(std::chrono::milliseconds limit);
     void enable_structured(bool enabled);
     
@@ -66,17 +67,17 @@ private:
 };
 
 // Secure logging macros
-#define LOG_DEBUG(msg) if (rtes::Logger::instance().level_ <= rtes::LogLevel::DEBUG) rtes::Logger::instance().debug(msg)
-#define LOG_INFO(msg) if (rtes::Logger::instance().level_ <= rtes::LogLevel::INFO) rtes::Logger::instance().info(msg)
-#define LOG_WARN(msg) if (rtes::Logger::instance().level_ <= rtes::LogLevel::WARN) rtes::Logger::instance().warn(msg)
-#define LOG_ERROR(msg) if (rtes::Logger::instance().level_ <= rtes::LogLevel::ERROR) rtes::Logger::instance().error(msg)
+#define LOG_DEBUG(msg) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::DEBUG) rtes::Logger::instance().debug(msg)
+#define LOG_INFO(msg) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::INFO) rtes::Logger::instance().info(msg)
+#define LOG_WARN(msg) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::WARN) rtes::Logger::instance().warn(msg)
+#define LOG_ERROR(msg) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::ERROR) rtes::Logger::instance().error(msg)
 #define LOG_FATAL(msg) rtes::Logger::instance().fatal(msg)
 
 // Type-safe logging macros
-#define LOG_DEBUG_SAFE(fmt, ...) if (rtes::Logger::instance().level_ <= rtes::LogLevel::DEBUG) rtes::Logger::instance().debug_safe(fmt, __VA_ARGS__)
-#define LOG_INFO_SAFE(fmt, ...) if (rtes::Logger::instance().level_ <= rtes::LogLevel::INFO) rtes::Logger::instance().info_safe(fmt, __VA_ARGS__)
-#define LOG_WARN_SAFE(fmt, ...) if (rtes::Logger::instance().level_ <= rtes::LogLevel::WARN) rtes::Logger::instance().warn_safe(fmt, __VA_ARGS__)
-#define LOG_ERROR_SAFE(fmt, ...) if (rtes::Logger::instance().level_ <= rtes::LogLevel::ERROR) rtes::Logger::instance().error_safe(fmt, __VA_ARGS__)
+#define LOG_DEBUG_SAFE(fmt, ...) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::DEBUG) rtes::Logger::instance().debug_safe(fmt, __VA_ARGS__)
+#define LOG_INFO_SAFE(fmt, ...) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::INFO) rtes::Logger::instance().info_safe(fmt, __VA_ARGS__)
+#define LOG_WARN_SAFE(fmt, ...) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::WARN) rtes::Logger::instance().warn_safe(fmt, __VA_ARGS__)
+#define LOG_ERROR_SAFE(fmt, ...) if (rtes::Logger::instance().getLevel() <= rtes::LogLevel::ERROR) rtes::Logger::instance().error_safe(fmt, __VA_ARGS__)
 #define LOG_FATAL_SAFE(fmt, ...) rtes::Logger::instance().fatal_safe(fmt, __VA_ARGS__)
 
 } // namespace rtes

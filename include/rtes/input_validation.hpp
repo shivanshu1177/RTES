@@ -22,6 +22,19 @@ enum class ValidationError {
     SCHEMA_VIOLATION
 };
 
+} // namespace rtes
+
+// Make ValidationError compatible with std::error_code
+namespace std {
+template<>
+struct is_error_code_enum<rtes::ValidationError> : true_type {};
+}
+
+namespace rtes {
+
+// Forward declaration for error code conversion
+std::error_code make_error_code(ValidationError ve);
+
 // Field validation rules
 struct ValidationRule {
     std::function<bool(const std::string&)> validator;

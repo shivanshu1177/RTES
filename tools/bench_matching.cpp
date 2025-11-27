@@ -34,7 +34,15 @@ void benchmark_matching_engine() {
         Price price = price_dist(gen);
         Quantity qty = qty_dist(gen);
         
-        new (order) Order(i + 1, 100, "AAPL", side, OrderType::LIMIT, qty, price);
+        order->id = i + 1;
+        order->client_id.assign("100");
+        order->symbol.assign("AAPL");
+        order->side = side;
+        order->type = OrderType::LIMIT;
+        order->quantity = qty;
+        order->price = price;
+        order->remaining_quantity = qty;
+        order->status = OrderStatus::PENDING;
         
         while (!engine.submit_order(order)) {
             std::this_thread::yield();

@@ -28,14 +28,14 @@ Result<void> RollingUpdateManager::start_deployment(const DeploymentConfig& conf
     
     deployment_thread_ = std::thread(&RollingUpdateManager::deployment_loop, this);
     
-    LOG_INFO("Started deployment for version {} to {}", 
-             config.version, static_cast<int>(config.target_env));
+    LOG_INFO_SAFE("Started deployment for version {} to {}", 
+                  config.version, static_cast<int>(config.target_env));
     
     return Result<void>();
 }
 
 void RollingUpdateManager::abort_deployment(const std::string& reason) {
-    LOG_WARN("Aborting deployment: {}", reason);
+    LOG_WARN_SAFE("Aborting deployment: {}", reason);
     
     current_phase_.store(DeploymentPhase::ROLLBACK);
     execute_rollback();
@@ -117,7 +117,7 @@ void RollingUpdateManager::deployment_loop() {
         LOG_INFO("Deployment completed successfully");
         
     } catch (const std::exception& e) {
-        LOG_ERROR("Deployment failed with exception: {}", e.what());
+        LOG_ERROR_SAFE("Deployment failed with exception: {}", e.what());
         abort_deployment("Exception during deployment");
     }
 }
@@ -154,7 +154,7 @@ void RollingUpdateManager::ramp_traffic() {
         }
         traffic_percentage_.store(current_traffic);
         
-        LOG_INFO("Traffic ramped to {}%", current_traffic * 100);
+        LOG_INFO_SAFE("Traffic ramped to {}%", current_traffic * 100);
         
         // Health check during ramp
         if (!validate_health_checks()) {
@@ -174,7 +174,7 @@ void RollingUpdateManager::execute_rollback() {
         try {
             rollback_handler_();
         } catch (const std::exception& e) {
-            LOG_ERROR("Rollback handler failed: {}", e.what());
+            LOG_ERROR_SAFE("Rollback handler failed: {}", e.what());
         }
     }
     
@@ -204,7 +204,7 @@ bool ReadinessProbe::is_ready() const {
                 return false;
             }
         } catch (const std::exception& e) {
-            LOG_ERROR("Readiness check '{}' failed: {}", name, e.what());
+            LOG_ERROR_SAFE("Readiness check '{}' failed: {}", name, e.what());
             return false;
         }
     }
@@ -256,7 +256,7 @@ bool LivenessProbe::is_alive() const {
                 return false;
             }
         } catch (const std::exception& e) {
-            LOG_ERROR("Liveness check '{}' failed: {}", name, e.what());
+            LOG_ERROR_SAFE("Liveness check '{}' failed: {}", name, e.what());
             return false;
         }
     }
@@ -286,7 +286,7 @@ void DeploymentHealthEndpoints::start_server(uint16_t port) {
     port_ = port;
     server_thread_ = std::thread(&DeploymentHealthEndpoints::server_loop, this);
     
-    LOG_INFO("Health endpoints server started on port {}", port);
+    LOG_INFO_SAFE("Health endpoints server started on port {}", port);
 }
 
 void DeploymentHealthEndpoints::stop_server() {
@@ -397,7 +397,7 @@ void DeploymentHealthEndpoints::server_loop() {
     address.sin_port = htons(port_);
     
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
-        LOG_ERROR("Failed to bind health server to port {}", port_);
+        LOG_ERROR_SAFE("Failed to bind health server to port {}", port_);
         close(server_fd);
         return;
     }

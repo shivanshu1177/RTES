@@ -2,8 +2,10 @@
 
 #include "rtes/error_handling.hpp"
 #include "rtes/memory_safety.hpp"
+#ifndef RTES_NO_OPENSSL
 #include <openssl/ssl.h>
 #include <openssl/hmac.h>
+#endif
 #include <string>
 #include <chrono>
 #include <unordered_map>
@@ -55,14 +57,20 @@ public:
     
     Result<void> initialize();
     Result<int> accept_secure_connection(int listen_fd);
+#ifndef RTES_NO_OPENSSL
     Result<void> verify_client_certificate(SSL* ssl);
     Result<size_t> secure_read(SSL* ssl, void* buffer, size_t size);
     Result<size_t> secure_write(SSL* ssl, const void* buffer, size_t size);
     void close_connection(SSL* ssl);
+#endif
     
 private:
     SecurityConfig config_;
+#ifndef RTES_NO_OPENSSL
     SSL_CTX* ssl_ctx_ = nullptr;
+#else
+    void* ssl_ctx_ = nullptr;
+#endif
     
     Result<void> setup_ssl_context();
     Result<void> load_certificates();
@@ -146,7 +154,9 @@ class ClientAuthenticator {
 public:
     ClientAuthenticator(const SecurityConfig& config);
     
+#ifndef RTES_NO_OPENSSL
     Result<std::string> authenticate_certificate(SSL* ssl);
+#endif
     Result<std::string> validate_api_key(const std::string& api_key);
     Result<std::string> create_session(const std::string& client_id);
     bool validate_session(const std::string& session_token);
@@ -166,7 +176,9 @@ private:
     std::unordered_map<std::string, std::string> api_keys_; // api_key -> client_id
     
     std::string generate_session_token();
+#ifndef RTES_NO_OPENSSL
     std::string extract_client_id_from_cert(SSL* ssl);
+#endif
 };
 
 // Secure network layer orchestrator
@@ -179,8 +191,10 @@ public:
     
     // Secure TCP operations
     Result<int> accept_secure_tcp_connection(int listen_fd, std::string& client_id);
+#ifndef RTES_NO_OPENSSL
     Result<size_t> read_secure_tcp_message(SSL* ssl, void* buffer, size_t size);
     Result<size_t> write_secure_tcp_message(SSL* ssl, const void* buffer, size_t size);
+#endif
     
     // Authenticated UDP operations
     Result<void> broadcast_market_data(const void* data, size_t size);
