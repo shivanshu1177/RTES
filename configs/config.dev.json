@@ -1,0 +1,45 @@
+{
+  "environment": "development",
+  "exchange": {
+    "name": "RTES-DEV",
+    "tcp_port": 8888,
+    "udp_port": 9999,
+    "metrics_port": 8080,
+    "udp_multicast_group": "239.0.0.1"
+  },
+  "risk": {
+    "max_order_size": 100000,
+    "max_notional_per_client": 1000000.0,
+    "max_orders_per_second": 1000,
+    "enable_risk_checks": true
+  },
+  "performance": {
+    "order_pool_size": 100000,
+    "queue_capacity": 10000,
+    "udp_buffer_size": 65536,
+    "enable_performance_monitoring": true
+  },
+  "security": {
+    "enable_tls": false,
+    "enable_authentication": false,
+    "log_level": "DEBUG",
+    "enable_audit_logging": true
+  },
+  "symbols": [
+    {
+      "name": "AAPL",
+      "tick_size": 0.01,
+      "lot_size": 1
+    },
+    {
+      "name": "GOOGL",
+      "tick_size": 0.01,
+      "lot_size": 1
+    }
+  ],
+  "feature_flags": {
+    "enable_new_matching_engine": false,
+    "enable_enhanced_risk_checks": true,
+    "enable_market_data_compression": false
+  }
+}
