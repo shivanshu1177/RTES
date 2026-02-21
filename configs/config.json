@@ -28,7 +28,7 @@
   ],
   "risk": {
     "max_order_size": 10000,
-    "max_notional_per_client": 1000000.0,
+    "max_notional_per_client": 10000000000.0,
     "max_orders_per_second": 1000,
     "price_collar_enabled": true
   },

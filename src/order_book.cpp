@@ -5,6 +5,7 @@ namespace rtes {
 
 OrderBook::OrderBook(const std::string& symbol, OrderPool& pool, TradeCallback cb)
     : symbol_(symbol), pool_(pool), trade_callback_(cb) {
+    order_lookup_.reserve(65536);
 }
 
 bool OrderBook::add_order(Order* order) {
@@ -14,11 +15,15 @@ bool OrderBook::add_order(Order* order) {
     order_lookup_[order->order_id] = order;
     
     match_order(order);
-    
+
     if (!order->is_filled()) {
         add_to_book(order);
+    } else {
+        // Aggressive order fully filled during matching — remove from lookup and return to pool
+        order_lookup_.erase(order->order_id);
+        pool_.release(order);
     }
-    
+
     return true;
 }
 
@@ -56,22 +61,28 @@ void OrderBook::match_order(Order* order) {
     if (order->side == Side::BUY) {
         // Buy order matches against asks
         while (!order->is_filled() && !asks_.empty()) {
-            auto& best_level = asks_.begin()->second;
-            
+            auto it = asks_.begin();
+            // Prefetch the next price level while processing the current one.
+            // __builtin_prefetch is portable: maps to prfm on arm64, prefetcht0 on x86.
+            auto nxt = std::next(it);
+            if (nxt != asks_.end())
+                __builtin_prefetch(&nxt->second, 0, 1);
+
+            auto& best_level = it->second;
             if (order->type == OrderType::MARKET || order->price >= best_level.price) {
                 auto* passive_order = best_level.orders.front();
                 Quantity trade_qty = std::min(order->remaining(), passive_order->remaining());
-                
+
                 execute_trade(order, passive_order, trade_qty, best_level.price);
-                
+
                 if (passive_order->is_filled()) {
                     best_level.orders.pop_front();
                     best_level.total_quantity -= passive_order->quantity;
                     order_lookup_.erase(passive_order->order_id);
                     pool_.release(passive_order);
-                    
+
                     if (best_level.orders.empty()) {
-                        asks_.erase(asks_.begin());
+                        asks_.erase(it);
                     }
                 }
             } else {
@@ -81,22 +92,26 @@ void OrderBook::match_order(Order* order) {
     } else {
         // Sell order matches against bids
         while (!order->is_filled() && !bids_.empty()) {
-            auto& best_level = bids_.begin()->second;
-            
+            auto it = bids_.begin();
+            auto nxt = std::next(it);
+            if (nxt != bids_.end())
+                __builtin_prefetch(&nxt->second, 0, 1);
+
+            auto& best_level = it->second;
             if (order->type == OrderType::MARKET || order->price <= best_level.price) {
                 auto* passive_order = best_level.orders.front();
                 Quantity trade_qty = std::min(order->remaining(), passive_order->remaining());
-                
+
                 execute_trade(order, passive_order, trade_qty, best_level.price);
-                
+
                 if (passive_order->is_filled()) {
                     best_level.orders.pop_front();
                     best_level.total_quantity -= passive_order->quantity;
                     order_lookup_.erase(passive_order->order_id);
                     pool_.release(passive_order);
-                    
+
                     if (best_level.orders.empty()) {
-                        bids_.erase(bids_.begin());
+                        bids_.erase(it);
                     }
                 }
             } else {

@@ -17,23 +17,38 @@ struct OrderRequest {
     ClientID client_id;  // For ownership verification
 };
 
+// POD trade data for use inside the union (Trade itself has std::string)
+struct TradeData {
+    TradeID  trade_id{0};
+    OrderID  buy_order_id{0};
+    OrderID  sell_order_id{0};
+    Price    price{0};
+    Quantity quantity{0};
+};
+
 struct MarketDataEvent {
-    enum Type { TRADE, BBO_UPDATE } type;
-    char symbol[8];
+    enum Type { TRADE, BBO_UPDATE } type{TRADE};
+    char symbol[8]{};
     union {
-        Trade trade;
+        TradeData trade;
         struct {
-            Price bid_price;
-            Quantity bid_quantity;
-            Price ask_price;
-            Quantity ask_quantity;
+            Price    bid_price{0};
+            Quantity bid_quantity{0};
+            Price    ask_price{0};
+            Quantity ask_quantity{0};
         } bbo;
     };
-    
-    MarketDataEvent() = default;
-    MarketDataEvent(const Trade& t) : type(TRADE) {
-        trade = t;
-        std::strncpy(symbol, t.symbol, sizeof(symbol));
+
+    MarketDataEvent() : type(BBO_UPDATE), bbo{} {}
+
+    explicit MarketDataEvent(const Trade& t) : type(TRADE), trade{} {
+        trade.trade_id      = t.trade_id;
+        trade.buy_order_id  = t.buy_order_id;
+        trade.sell_order_id = t.sell_order_id;
+        trade.price         = t.price;
+        trade.quantity      = t.quantity;
+        std::strncpy(symbol, t.symbol.c_str(), sizeof(symbol) - 1);
+        symbol[sizeof(symbol) - 1] = '\0';
     }
 };
 

@@ -72,7 +72,9 @@ public:
     }
 
 private:
-    struct Cell {
+    // alignas(64) ensures each Cell occupies its own cache line, preventing
+    // false sharing between producer and consumer threads on adjacent slots.
+    struct alignas(64) Cell {
         std::atomic<size_t> sequence{0};
         T data;
     };

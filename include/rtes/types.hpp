@@ -9,6 +9,7 @@ using Price = uint64_t;
 using Quantity = uint32_t;
 using OrderID = uint64_t;
 using TradeID = uint64_t;
+using ClientID = uint64_t;
 
 enum class Side : uint8_t {
     BUY = 0,
@@ -21,7 +22,8 @@ enum class OrderType : uint8_t {
 };
 
 struct Order {
-    OrderID order_id{0};
+    OrderID  order_id{0};
+    ClientID client_id{0};
     std::string symbol;
     Side side{Side::BUY};
     OrderType type{OrderType::LIMIT};
