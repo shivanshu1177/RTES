@@ -1,79 +1,52 @@
-#include "rtes/matching_engine.hpp"
-#include "rtes/memory_pool.hpp"
+#include "rtes/order_book.hpp"
+#include "rtes/logger.hpp"
 #include <chrono>
-#include <iostream>
 #include <random>
 
-namespace rtes {
+using namespace rtes;
 
-void benchmark_matching_engine() {
-    constexpr size_t pool_size = 100000;
-    constexpr size_t num_orders = 50000;
+int main() {
+    LOG_INFO("Starting matching engine benchmark");
     
-    OrderPool pool(pool_size);
-    MPMCQueue<MarketDataEvent> market_data_queue(10000);
-    MatchingEngine engine("AAPL", pool);
+    const size_t num_orders = 10000;
+    OrderPool pool(num_orders);
     
-    engine.set_market_data_queue(&market_data_queue);
-    engine.start();
+    size_t trade_count = 0;
+    auto trade_callback = [&trade_count](const Trade&) { trade_count++; };
+    
+    OrderBook book("AAPL", pool, trade_callback);
     
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> side_dist(1, 2);
     std::uniform_int_distribution<> price_dist(14900, 15100);
-    std::uniform_int_distribution<> qty_dist(100, 1000);
+    std::uniform_int_distribution<> qty_dist(1, 100);
+    std::uniform_int_distribution<> side_dist(0, 1);
     
     auto start = std::chrono::high_resolution_clock::now();
     
-    // Submit orders
     for (size_t i = 0; i < num_orders; ++i) {
-        auto* order = pool.allocate();
-        if (!order) break;
+        auto* order = pool.acquire();
+        *order = Order{
+            .order_id = i + 1,
+            .symbol = "AAPL",
+            .side = static_cast<Side>(side_dist(gen)),
+            .type = OrderType::LIMIT,
+            .price = static_cast<Price>(price_dist(gen)),
+            .quantity = static_cast<Quantity>(qty_dist(gen))
+        };
         
-        Side side = (side_dist(gen) == 1) ? Side::BUY : Side::SELL;
-        Price price = price_dist(gen);
-        Quantity qty = qty_dist(gen);
-        
-        new (order) Order(i + 1, 100, "AAPL", side, OrderType::LIMIT, qty, price);
-        
-        while (!engine.submit_order(order)) {
-            std::this_thread::yield();
-        }
-    }
-    
-    // Wait for processing
-    while (engine.orders_processed() < num_orders) {
-        std::this_thread::sleep_for(std::chrono::microseconds(10));
+        book.add_order(order);
     }
     
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     
-    engine.stop();
-    
-    std::cout << "Matching Engine Benchmark:\n";
-    std::cout << "  Orders processed: " << engine.orders_processed() << "\n";
-    std::cout << "  Trades executed: " << engine.trades_executed() << "\n";
-    std::cout << "  Total time: " << duration.count() / 1000.0 << " ms\n";
-    std::cout << "  Avg latency: " << duration.count() / num_orders << " μs/order\n";
-    std::cout << "  Throughput: " << (num_orders * 1e6) / duration.count() << " orders/sec\n";
-    
-    // Drain market data queue
-    MarketDataEvent event;
-    size_t md_events = 0;
-    while (market_data_queue.pop(event)) {
-        ++md_events;
-    }
-    std::cout << "  Market data events: " << md_events << "\n";
-}
-
-} // namespace rtes
-
-int main() {
-    std::cout << "Matching Engine Benchmarks\n";
-    std::cout << "===========================\n\n";
-    
-    rtes::benchmark_matching_engine();
+    LOG_INFO("Matching engine benchmark completed");
+    LOG_INFO("Orders processed: " + std::to_string(num_orders));
+    LOG_INFO("Trades executed: " + std::to_string(trade_count));
+    LOG_INFO("Total time: " + std::to_string(duration.count()) + " μs");
+    LOG_INFO("Average time per order: " + std::to_string(duration.count() / num_orders) + " μs");
+    LOG_INFO("Orders/second: " + std::to_string(num_orders * 1000000 / duration.count()));
     
     return 0;
 }
