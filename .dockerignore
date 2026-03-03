@@ -1,0 +1,13 @@
+build/
+.git/
+.github/
+*.md
+.gitignore
+.dockerignore
+docker-compose.yml
+Dockerfile*
+logs/
+*.log
+core.*
+.vscode/
+.idea/

@@ -1,0 +1,981 @@
+[  4%] Building CXX object CMakeFiles/rtes_core.dir/src/client_base.cpp.o
+[  4%] Building CXX object CMakeFiles/rtes_core.dir/src/config.cpp.o
+[  6%] Building CXX object CMakeFiles/rtes_core.dir/src/deployment_manager.cpp.o
+[  8%] Building CXX object CMakeFiles/rtes_core.dir/src/error_handling.cpp.o
+[ 10%] Building CXX object CMakeFiles/rtes_core.dir/src/exchange.cpp.o
+[ 12%] Building CXX object CMakeFiles/rtes_core.dir/src/input_validation.cpp.o
+[ 17%] Building CXX object CMakeFiles/rtes_core.dir/src/memory_safety.cpp.o
+[ 17%] Building CXX object CMakeFiles/rtes_core.dir/src/matching_engine.cpp.o
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:1:
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:236:1: error: extraneous closing brace ('}')
+  236 | } // namespace rtes
+      | ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:985:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/file_clock.h:39:19: error: no template named 'time_point'; did you mean '::std::chrono::time_point'?
+   39 | using file_time = time_point<file_clock, _Duration>;
+      |                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/time_point.h:34:28: note: '::std::chrono::time_point' declared here
+   34 | class _LIBCPP_TEMPLATE_VIS time_point {
+      |                            ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:985:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/file_clock.h:52:11: error: unknown type name 'nano'; did you mean '::std::nano'?
+   52 |   typedef nano period;
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/ratio:257:34: note: '::std::nano' declared here
+  257 | typedef ratio<1LL, 1000000000LL> nano;
+      |                                  ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:985:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/file_clock.h:58:11: error: no template named 'duration' in namespace 'rtes::std::chrono'; did you mean '::std::chrono::duration'?
+   58 |   typedef chrono::duration<rep, period> duration;
+      |           ^~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/duration.h:159:28: note: '::std::chrono::duration' declared here
+  159 | class _LIBCPP_TEMPLATE_VIS duration {
+      |                            ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:985:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/file_clock.h:59:11: error: no template named 'time_point' in namespace 'rtes::std::chrono'; did you mean '::std::chrono::time_point'?
+   59 |   typedef chrono::time_point<_FilesystemClock> time_point;
+      |           ^~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/time_point.h:34:28: note: '::std::chrono::time_point' declared here
+   34 | class _LIBCPP_TEMPLATE_VIS time_point {
+      |                            ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:985:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/file_clock.h:67:32: error: no template named 'sys_time' in namespace 'rtes::std::chrono'; did you mean '::std::chrono::sys_time'?
+   67 |   _LIBCPP_HIDE_FROM_ABI static chrono::sys_time<_Duration> to_sys(const chrono::file_time<_Duration>& __t) {
+      |                                ^~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/system_clock.h:42:1: note: '::std::chrono::sys_time' declared here
+   42 | using sys_time    = time_point<system_clock, _Duration>;
+      | ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:985:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/file_clock.h:72:76: error: no template named 'sys_time' in namespace 'rtes::std::chrono'; did you mean '::std::chrono::sys_time'?
+   72 |   _LIBCPP_HIDE_FROM_ABI static chrono::file_time<_Duration> from_sys(const chrono::sys_time<_Duration>& __t) {
+      |                                                                            ^~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/system_clock.h:42:1: note: '::std::chrono::sys_time' declared here
+   42 | using sys_time    = time_point<system_clock, _Duration>;
+      | ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:985:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/file_clock.h:68:12: error: no template named 'sys_time' in namespace 'rtes::std::chrono'; did you mean '::std::chrono::sys_time'?
+   68 |     return chrono::sys_time<_Duration>(__t.time_since_epoch());
+      |            ^~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/system_clock.h:42:1: note: '::std::chrono::sys_time' declared here
+   42 | using sys_time    = time_point<system_clock, _Duration>;
+      | ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:992:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/calendar.h:29:23: error: no template named 'time_point'; did you mean '::std::chrono::time_point'?
+   29 | using local_time    = time_point<local_t, _Duration>;
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/time_point.h:34:28: note: '::std::chrono::time_point' declared here
+   34 | class _LIBCPP_TEMPLATE_VIS time_point {
+      |                            ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:992:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/calendar.h:30:34: error: unknown type name 'seconds'; did you mean '::std::chrono::seconds'?
+   30 | using local_seconds = local_time<seconds>;
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/duration.h:286:30: note: '::std::chrono::seconds' declared here
+  286 | typedef duration<long long > seconds;
+      |                              ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:992:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/calendar.h:31:34: error: use of undeclared identifier 'days'
+   31 | using local_days    = local_time<days>;
+      |                                  ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:993:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:53:57: error: unknown type name 'days'; did you mean 'day'?
+   53 |   _LIBCPP_HIDE_FROM_ABI constexpr day& operator+=(const days& __dd) noexcept;
+      |                                                         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:27:7: note: 'day' declared here
+   27 | class day {
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:54:57: error: unknown type name 'days'; did you mean 'day'?
+   54 |   _LIBCPP_HIDE_FROM_ABI constexpr day& operator-=(const days& __dd) noexcept;
+      |                                                         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:27:7: note: 'day' declared here
+   27 | class day {
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:63:40: error: unknown type name 'strong_ordering'; did you mean '::std::strong_ordering'?
+   63 | _LIBCPP_HIDE_FROM_ABI inline constexpr strong_ordering operator<=>(const day& __lhs, const day& __rhs) noexcept {
+      |                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__compare/ordering.h:192:7: note: '::std::strong_ordering' declared here
+  192 | class strong_ordering {
+      |       ^
+In file included from /Users/shivanshu/projects/RTES/src/memory_safety.cpp:2:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:4:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/chrono:993:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:67:78: error: unknown type name 'days'; did you mean 'day'?
+   67 | _LIBCPP_HIDE_FROM_ABI inline constexpr day operator+(const day& __lhs, const days& __rhs) noexcept {
+      |                                                                              ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:27:7: note: 'day' declared here
+   27 | class day {
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:68:51: error: no member named 'count' in 'rtes::std::chrono::day'
+   68 |   return day(static_cast<unsigned>(__lhs) + __rhs.count());
+      |                                             ~~~~~ ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:71:60: error: unknown type name 'days'; did you mean 'day'?
+   71 | _LIBCPP_HIDE_FROM_ABI inline constexpr day operator+(const days& __lhs, const day& __rhs) noexcept {
+      |                                                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:27:7: note: 'day' declared here
+   27 | class day {
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:71:44: error: redefinition of 'operator+'
+   71 | _LIBCPP_HIDE_FROM_ABI inline constexpr day operator+(const days& __lhs, const day& __rhs) noexcept {
+      |                                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:67:44: note: previous definition is here
+   67 | _LIBCPP_HIDE_FROM_ABI inline constexpr day operator+(const day& __lhs, const days& __rhs) noexcept {
+      |                                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:75:78: error: unknown type name 'days'; did you mean 'day'?
+   75 | _LIBCPP_HIDE_FROM_ABI inline constexpr day operator-(const day& __lhs, const days& __rhs) noexcept {
+      |                                                                              ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/day.h:27:7: note: 'day' declared here
+   27 | class day {
+      |       ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/memory_safety.cpp.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:236:1: error: extraneous closing brace ('}')
+  236 | } // namespace rtes
+      | ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:35:48: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   35 | _LIBCPP_EXPORTED_FROM_ABI void sleep_for(const chrono::nanoseconds& __ns);
+      |                                                ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:38:44: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   38 | _LIBCPP_HIDE_FROM_ABI void sleep_for(const chrono::duration<_Rep, _Period>& __d) {
+      |                                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:39:13: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   39 |   if (__d > chrono::duration<_Rep, _Period>::zero()) {
+      |             ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:43:23: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   43 |     _LIBCPP_CONSTEXPR chrono::duration<long double> __max = chrono::duration<long double>(9223372036.0L);
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:236:1: error: extraneous closing brace ('}')
+  236 | } // namespace rtes
+      | ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:43:61: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   43 |     _LIBCPP_CONSTEXPR chrono::duration<long double> __max = chrono::duration<long double>(9223372036.0L);
+      |                                                             ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/deployment_manager.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/deployment_manager.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/secure_config.hpp:3:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:66:31: error: missing ',' between enumerators
+   66 |     BACKUP_VERIFICATION_FAILED
+      |                               ^
+      |                               , 
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:66:31: error: missing ',' between enumerators
+   66 |     BACKUP_VERIFICATION_FAILED
+      |                               ^
+      |                               , 
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:44:5: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:4:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/memory_pool.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:236:   44 |     chrono::nanoseconds1 :_ _nserror: extraneous closing brace ('}')
+  236 | } /;
+      |     ^
+//Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | n namespace rtes
+      | ^
+amespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:236:1: error: extraneous closing brace ('}')
+  236 | } // namespace rtes
+      | ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:66:31: error: missing ',' between enumerators
+   66 |     BACKUP_VERIFICATION_FAILED
+      |                               ^
+      |                               , 
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:46:14: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   46 |       __ns = chrono::duration_cast<chrono::nanoseconds>(__d);
+      |              ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:66:31: error: missing ',' between enumerators
+   66 |     BACKUP_VERIFICATION_FAILED
+      |                               ^
+      |                               , 
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:46:36: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   46 |       __ns = chrono::duration_cast<chrono::nanoseconds>(__d);
+      |                                    ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:50:14: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   50 |       __ns = chrono::nanoseconds::max();
+      |              ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:56:46: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   56 | _LIBCPP_HIDE_FROM_ABI void sleep_until(const chrono::time_point<_Clock, _Duration>& __t) {
+      |                                              ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: no template named 'is_error_code_enum'; did you mean '::std::is_error_code_enum'?
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^~~~~~~~~~~~~~~~~~
+      |        ::std::is_error_code_enum
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29:29: note: '::std::is_error_code_enum' declared here
+   29 | struct _LIBCPP_TEMPLATE_VIS is_error_code_enum : public false_type {};
+      |                             ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: class template specialization of 'is_error_code_enum' not in a namespace enclosing '__1'
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29:29: note: explicitly specialized declaration is here
+   29 | struct _LIBCPP_TEMPLATE_VIS is_error_code_enum : public false_type {};
+      |                             ^
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: no template named 'is_error_code_enum'; did you mean '::std::is_error_code_enum'?
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^~~~~~~~~~~~~~~~~~
+      |        ::std::is_error_code_enum
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+:29: note: '::std::is_error_code_enum' declared here
+   29 | struct _LIBCIn file included from PP_TEMPLATE_VIS is_er/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:57:3: error: unknown type name 'mutex'; did you mean '::std::mutex'?
+   57 |   mutex __mut;r
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__mutex/mutex.h:24:87: note: '::std::mutex' declared here
+   24 | class _LIBCPP_EXPORTED_FROM_ABI _LIBCPP_THREAD_SAFETY_ANNOTATION(capability("mutexor_code_enum ")) mutex {
+      : public false_type {};
+      |                             ^|                                                                                       ^
+
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: class template specialization of 'is_error_code_enum' not in a namespace enclosing '__1'
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29:29: note: explicitly specialized declaration is here
+   29 | struct _LIBCPP_TEMPLATE_VIS is_error_code_enum : public false_type {};
+      |                             ^
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: no template named 'is_error_code_enum'; did you mean '::std::is_error_code_enum'?
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^~~~~~~~~~~~~~~~~~
+      |        ::std::is_error_code_enum
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29:29: note: '::std::is_error_code_enum' declared here
+   29 | struct _LIBCPP_TEMPLATE_VIS is_error_code_enum : public false_type {};
+      |                             ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: class template specialization of 'is_error_code_enum' not in a namespace enclosing '__1'
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29:29: note: explicitly specialized declaration is here
+   29 | struct _LIBCPP_TEMPLATE_VIS is_error_code_enum : public false_type {};
+      |                             ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:58:3: error: unknown type name 'condition_variable'; did you mean '::std::condition_variable'?
+   58 |   condition_variable __cv;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__condition_variable/condition_variable.h:42:33: note: '::std::condition_variable' declared here
+   42 | class _LIBCPP_EXPORTED_FROM_ABI condition_variable {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:157:3: error: unknown type name 'mutex'; did you mean '::std::mutex'?
+  157 |   mutex __mut_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__mutex/mutex.h:24:87: note: '::std::mutex' declared here
+   24 | class _LIBCPP_EXPORTED_FROM_ABI _LIBCPP_THREAD_SAFETY_ANNOTATION(capability("mutex")) mutex {
+      |                                                                                       ^
+In file included from /Users/shivanshu/projects/RTES/src/error_handling.cpp:1:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:66:31: error: missing ',' between enumerators
+   66 |     BACKUP_VERIFICATION_FAILED
+      |                               ^
+      |                               , 
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:157:3: error: unknown type name 'mutex'; did you mean '::std::mutex'?
+  157 |   mutex __mut_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__mutex/mutex.h:24:87: note: '::std::mutex' declared here
+   24 | class _LIBCPP_EXPORTED_FROM_ABI _LIBCPP_THREAD_SAFETY_ANNOTATION(capability("mutex")) mutex {
+      |                                                                                       ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:980:54: error: expected class name
+  980 | class _LIBCPP_EXPORTED_FROM_ABI regex_error : public runtime_error {
+      |                                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:986:28: error: only virtual member functions can be marked 'override'
+  986 |   ~regex_error() _NOEXCEPT override;
+      |                            ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:59:15: error: unknown type name 'mutex'; did you mean '::std::mutex'?
+   59 |   unique_lock<mutex> __lk(__mut);
+      |               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__mutex/mutex.h:24:87: note: '::std::mutex' declared here
+   24 | class _LIBCPP_EXPORTED_FROM_ABI _LIBCPP_THREAD_SAFETY_ANNOTATION(capability("mutex")) mutex {
+      |                                                                                       ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:158:3: error: unknown type name 'condition_variable'; did you mean '::std::condition_variable'?
+  158 |   condition_variable __gate1_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__condition_variable/condition_variable.h:42:33: note: '::std::condition_variable' declared here
+   42 | class _LIBCPP_EXPORTED_FROM_ABI condition_variable {
+      |                                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1003:11: error: no template named 'basic_string'; did you mean '::std::basic_string'?
+ 1003 |   typedef basic_string<char_type> string_type;
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:765:7: note: '::std::basic_string' declared here
+  765 | class basic_string {
+      |       ^
+In file included from /Users/shivanshu/projects/RTES/src/client_base.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/client_base.hpp:6:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread:96:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:158:3: 59:21: error: expected ';' after expression
+   59 |   unique_lock<mutex> __lk(__mut);
+      |                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:59:3: error: use of undeclared identifier 'unique_lock'
+   error: unknown type name 'condition_variable'; did you mean '::std::condition_variable'?
+  158 |   condition_variab59 |   unique_lock<mutex> __lk(__mut);
+      |   ^
+le __gate1_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__condition_variable/condition_variable.h:42:33: note: '::std::condition_variable' declared here
+   42 | class _LIBCPP_EXPORTED_FROM_ABI condition_variable {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1004:11: error: unknown type name 'locale'; did you mean '::std::locale'?
+ 1004 |   typedef locale locale_type;
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:53:33: note: '::std::locale' declared here
+   53 | class _LIBCPP_EXPORTED_FROM_ABI locale {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1021:11: error: use of undeclared identifier 'ctype_base'; did you mean '::std::ctype_base'?
+ 1021 |   typedef ctype_base::mask char_class_type;
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:300:33: note: '::std::ctype_base' declared here
+  300 | class _LIBCPP_EXPORTED_FROM_ABI ctype_base {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:159:3: error: unknown type name 'condition_variable'; did you mean '::std::condition_variable'?
+  159 |   condition_variable __gate2_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__condition_variable/condition_variable.h:42:33: note: '::std::condition_variable' declared here
+   42 | class _LIBCPP_EXPORTED_FROM_ABI condition_variable {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:159:3: error: unknown type name 'condition_variable'; did you mean '::std::condition_variable'?
+  159 |   condition_variable __gate2_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__condition_variable/condition_variable.h:42:33: note: '::std::condition_variable' declared here
+   42 | class _LIBCPP_EXPORTED_FROM_ABI condition_variable {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:239:49: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  239 |   _LIBCPP_HIDE_FROM_ABI bool try_lock_for(const chrono::duration<_Rep, _Period>& __rel_time)
+      |                                                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1024:47: error: use of undeclared identifier 'ctype_base'; did you mean '::std::ctype_base'?
+ 1024 |   static const char_class_ty/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:59:22: error: use of undeclared identifier '__lk'
+   59 |   unique_lock<mutex> __lk(__mut);
+      |                      ^
+pe __regex_word = ctype_base::__regex_word;
+      |                                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:300:33: note: '::std::ctype_base' declared hereIn file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+
+In file included from   300 | class _L/Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:245I:24: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  245 |   try_lock_until(const chrono::time_point<_Clock, _Duration>& __abs_time)BCPP
+      |                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:_EXPORTED_FROM11: note: '::std::chrono' declared here
+   50 | n_aAmBeIs pcatcyep ech_rono {
+      |           ^
+base {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:239:49: /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/protocol.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/types.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:236:1: error: extraneous closing brace ('}')
+  236 | error: } // namespace rtes
+      | ^
+use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  239 |   _LIBCPP_HIDE_FROM_ABI bool try_lock_for(const chrono::duration<_Rep, _Period>& __rel_time)
+      |                                                 ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:253:56: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+  In file included from 253/Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp | : 5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:66:31: error: missing ',' between enumerators
+   66 |     BAC KUP__LIBCVERIFIPP_HIDE_CATION_FAFROM_ABI boILED
+      ol t|                               ^
+      |                               , 
+ry_lock_shared_for(const chrono::duration<_Rep, _Period>& __rel_time)
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1027:3: error: unknown type name 'locale'; did you mean '::std::locale'?
+ 1027 |   locale __loc_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:53:33: note: '::std::locale' declared here
+   53 | class _LIBCPP_EXPORTED_FROM_ABI locale {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1028:9: error: no template named 'ctype'; did you mean '::std::ctype'?
+ 1028 |   const ctype<char_type>* __ct_;
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:454:28: note: '::std::ctype' declared here
+  454 | class _LIBCPP_TEMPLATE_VIS /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:61:21: error: use of undeclared identifier '__lk'; did you mean '__t'?
+   61 |   cIn file included from  type;/Users/shivanshu/projects/RTES/src/exchange.cpp
+:      13|  __c:
+vIn file included from ./Users/shivanshu/projects/RTES/include/rtes/exchange.hppwait_                           ^u:ntil(__lk, __t);
+      |                     ^5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:245:24:
+ error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+
+  245/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h | : 56 :t85r:y _note: l'__t' declared hereo
+ck_until(const chrono::time_point<   _56C | l_oLcIkB,C P_PD_uHrIaDtEi_oFnR>O&M __A_BaIb sv_otime)
+      |                        ^
+id /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | nasleep_mespuntil(const chronao::time_pocien t<_Clock, _Duration>& __tchrono ){
+      |           ^
+ {
+      |                                                                                     ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:253:56: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  253 |   _LIBCPP_HIDE_FROM_ABI bool try_lock_shared_for(const chrono::duration<_Rep, _Period>& __rel_time)
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:259:31: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  259 |   try_lock_shared_until(const chrono::time_point<_Clock, _Duration>& __abs_time)
+      |                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1029:9: error: no template named 'collate'; did you mean '::std::collate'?
+ 1029 |   const collate<char_type>* __col_;
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:178:28: note: '::std::collate' declared here
+  178 | class _LIBCPP_TEMPLATE_VIS collate : public locale::facet {
+      |                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h:65:53: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+   65 | inline _LIBCPP_HIDE_FROM_ABI void sleep_until(const chrono::time_point<chrono::steady_clock, _Duration>& __t) {
+      In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:259:31: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  259 |   try_lock_shared_until(const chrono::time_point<_Clock, _Duration>& __abs_time)
+      |                               ^|                                                     ^
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:241:27: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  241 |     return try_lock_until(chrono::steady_clock::now() + __rel_time);
+      |                           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1034:77: error: no template named 'char_traits'; did you mean '::std::char_traits'?
+ 1034 |   _LIBCPP_HIDE_FROM_ABI static size_t length(const char_type* __p) { return char_traits<char_type>::length(__p); }
+      |                                                                             ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__string/char_traits.h:88:92: note: '::std::char_traits' declared here
+   88 |     "for a temporary period. It will be removed in LLVM 19, so please migrate off of it.") char_traits {
+      |                                                                                            ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:255:34: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  255 |     return try_lock_shared_until(chrono::steady_clock::now() + __rel_time);
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:241:27: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  241 |     return try_lock_until(chrono::steady_clock::now() + __rel_time);
+      |                           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:255:34: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  255 |     return try_lock_shared_until(chrono::steady_clock::now() + __rel_time);
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: no template named 'is_error_code_enum'; did you mean '::std::is_error_code_enum'?
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^~~~~~~~~~~~~~~~~~
+      |        ::std::is_error_code_enum
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29:29: note: '::std::is_error_code_enum' declared here
+   29 | struct _LIBCPP_TEMPLATE_VIS is_error_code_enum : public false_type {};
+      |                             ^
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:5:
+/Users/shivanshu/projects/RTES/include/rtes/error_handling.hpp:220:8: error: class template specialization of 'is_error_code_enum' not in a namespace enclosing '__1'
+  220 | struct is_error_code_enum<rtes::ErrorCode> : true_type {};
+      |        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:29:29: note: explicitly specialized declaration is here
+   29 | struct _LIBCPP_TEMPLATE_VIS is_error_code_enum : public false_type {};
+      |                             ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1111:13: error: no template named 'use_facet' in namespace 'rtes::std'; did you mean '::std::use_facet'?
+ 1111 |   __ct_  = &std::use_facet<ctype<char_type> >(__loc_);
+      |             ^~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:171:44: note: '::std::use_facet' declared here
+  171 | inline _LIBCPP_HIDE_FROM_ABI const _Facet& use_facet(const locale& __l) {
+      |                                            ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:265:47: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  265 | bool shared_timed_mutex::try_lock_until(const chrono::time_point<_Clock, _Duration>& __abs_time) {
+      |                                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:265:47: error: use of undeclared identifier 'chrono'; did you mean '::std::chrono'?
+  265 | bool shared_timed_mutex::try_lock_until(const chrono::time_point<_Clock, _Duration>& __abs_time) {
+      |                                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__chrono/ostream.h:50:11: note: '::std::chrono' declared here
+   50 | namespace chrono {
+      |           ^
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:980:54: error: expected class name
+  980 | class _LIBCPP_EXPORTED_FROM_ABI regex_error : public runtime_error {
+      |                                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:986:28: error: only virtual member functions can be marked 'override'
+  986 |   ~regex_error() _NOEXCEPT override;
+      |                            ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:15: error: unknown type name 'mutex'; did you mean '::std::mutex'?
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__mutex/mutex.h:24:87: note: '::std::mutex' declared here
+   24 | class _LIBCPP_EXPORTED_FROM_ABI _LIBCPP_THREAD_SAFETY_ANNOTATION(capability("mutex")) mutex {
+      |                                                                                       ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:15: error: unknown type name 'mutex'; did you mean '::std::mutex'?
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__mutex/mutex.h:24:87: note: '::std::mutex' declared here
+   24 | class _LIBCPP_EXPORTEIn file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hppD:_FROM_ABI _LIBCPP_THR7EAD_SAFETY_ANNOTATION(capability("mutex")) mutex {
+      |                                                                                       ^
+:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1111:28: error: use of undeclared identifier 'ctype'; did you mean 'wctype'?
+ 1111 |   __ct_  = &std::use_facet<ctype<char_type> >(__loc_);
+      |                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/___wctype.h:190:2: note: 'wctype' declared here
+  190 |         wctype(const char *);
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1003:11: error: no template named 'basic_string'; did you mean '::std::basic_string'?
+ 1003 |   typedef basic_string<char_type> string_type;
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:765:7: note: '::std::basic_string' declared here
+  765 | class basic_string {
+      |       ^
+In file included from /Users/shivanshu/projects/RTES/src/matching_engine.cpp:14:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:21: error: expected ';' after expression
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:3: error: use of undeclared identifier 'unique_lock'
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |   ^
+In file included from /Users/shivanshu/projects/RTES/src/exchange.cpp:13:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/exchange.hpp:5:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/matching_engine.hpp:3:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/order_book.hpp:6:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/thread_safety.hpp:5:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:21: error: expected ';' after expression
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:3: error: use of undeclared identifier 'unique_lock'
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |   ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1111:13: error: no template named 'use_facet' in namespace 'rtes::std'; did you mean '::std::use_facet'?
+ 1111 |   __ct_  = &std::use_facet<ctype<char_type> >(__loc_);
+      |             ^~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:171:44: note: '::std::use_facet' declared here
+  171 | inline _LIBCPP_HIDE_FROM_ABI const _Facet& use_facet(const locale& __l) {
+      |                                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:22: error: use of undeclared identifier '__lk'
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |                      ^
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1004:11: error: unknown type name 'locale'; did you mean '::std::locale'?
+ 1004 |   typedef locale locale_type;
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:53:33: note: '::std::locale' declared here
+   53 | class _LIBCPP_EXPORTED_FROM_ABI locale {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex1::
+269In file included from :/Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1112:13: error: no template named 'use_facet' in namespace 'rtes::std'; did you mean '::std::use_facet'?
+ 1112 |   __col_ = &std::use_fa7cet:< cerror: unknown type name 'cv_status'; did you mean '::std::cv_status'?
+ollate<char_t  269 |   y p e >  c>v(__s_tlaotcu_s) ;_
+_      s| t            ^~~~~a
+tus = __base_.__/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__localeg:a171t:e441:_ .note: w'::std::use_facet' declared herea
+it_until(__lk, _  _171a | bisn_ltiinmee )_;L
+I      B| C      ^P
+P_HIDE_FROM_ABI/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__condition_variable/condition_variable.h :c39o:n29s:t  note: _'::std::cv_status' declared hereF
+acet& use   _39f | a_cLeItB(CcPonst locale& __l) {
+      | P_                                           ^
+DECLARE_STRONG_ENUM(cv_status){no_timeout, timeout};
+      |                             ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:266:22: error: use of undeclared identifier '__lk'
+  266 |   unique_lock<mutex> __lk(__base_.__mut_);
+      |                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/shared_mutex:269:7: error: unknown type name 'cv_status'; did you mean '::std::cv_status'?
+  269 |       cv_status __status = __base_.__gate1_.wait_until(__lk, __abs_time);
+      |       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__condition_variable/condition_variable.h:39:29: note: '::std::cv_status' declared here
+   39 | _LIBCPP_DECLARE_STRONG_ENUM(cv_status){no_timeout, timeout};
+      |                             ^
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1021:11: error: use of undeclared identifier 'ctype_base'; did you mean '::std::ctype_base'?
+ 1021 |   typedef ctype_base::mask char_class_type;
+      |           ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:300:33: note: '::std::ctype_base' declared here
+  300 | class _LIBCPP_EXPORTED_FROM_ABI ctype_base {
+      |                                 ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+In file included from /Users/shivanshu/projects/RTES/src/input_validation.cpp:1:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1112:28: error: use of undeclared identifier 'collate'; did you mean 'regex_constants::collate'?
+ 1112 |   __col_ = &std::use_facet<collate<char_type> >(__loc_);
+      |                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:850:3: note: 'regex_constants::collate' declared here
+  850 |   collate  = 1 << 3,
+      |   ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1024:47: error: use of undeclared identifier 'ctype_base'; did you mean '::std::ctype_base'?
+ 1024 |   static const char_class_type __regex_word = ctype_base::__regex_word;
+      |                                               ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:300:33: note: '::std::ctype_base' declared here
+  300 | class _LIBCPP_EXPORTED_FROM_ABI ctype_base {
+      |                                 ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1027:3: error: unknown type name 'locale'; did you mean '::std::locale'?
+ 1027 |   locale __loc_;
+      |   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:53:33: note: '::std::locale' declared here
+   53 | class _LIBCPP_EXPORTED_FROM_ABI locale {
+      |                                 ^
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1028:9: error: no template named 'ctype'; did you mean '::std::ctype'?
+ 1028 |   const ctype<char_type>* __ct_;
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:454:28: note: '::std::ctype' declared here
+  454 | class _LIBCPP_TEMPLATE_VIS ctype;
+      |                            ^
+20 errors generated.
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1029:9: error: no template named 'collate'; did you mean '::std::collate'?
+ 1029 |   const collate<char_type>* __col_;
+      |         ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:178:28: note: '::std::collate' declared here
+  178 | class _LIBCPP_TEMPLATE_VIS collate : public locale::facet {
+      |                            ^
+make[2]: *** [CMakeFiles/rtes_core.dir/src/client_base.cpp.o] Error 1
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1034:77: error: no template named 'char_traits'; did you mean '::std::char_traits'?
+ 1034 |   _LIBCPP_HIDE_FROM_ABI static size_t length(const char_type* __p) { return char_traits<char_type>::length(__p); }
+      |                                                                             ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__string/char_traits.h:88:92: note: '::std::char_traits' declared here
+   88 |     "for a temporary period. It will be removed in LLVM 19, so please migrate off of it.") char_traits {
+      |                                                                                            ^
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1111:13: error: no template named 'use_facet' in namespace 'rtes::std'; did you mean '::std::use_facet'?
+ 1111 |   __ct_  = &std::use_facet<ctype<char_type> >(__loc_);
+      |             ^~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:171:44: note: '::std::use_facet' declared here
+  171 | inline _LIBCPP_HIDE_FROM_ABI const _Facet& use_facet(const locale& __l) {
+      |                                            ^
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1111:28: error: use of undeclared identifier 'ctype'; did you mean 'wctype'?
+ 1111 |   __ct_  = &std::use_facet<ctype<char_type> >(__loc_);
+      |                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/___wctype.h:190:2: note: 'wctype' declared here
+  190 |         wctype(const char *);
+      |         ^
+20 errors generated.
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1111:13: error: no template named 'use_facet' in namespace 'rtes::std'; did you mean '::std::use_facet'?
+ 1111 |   __ct_  = &std::use_facet<ctype<char_type> >(__loc_);
+      |             ^~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:171:44: note: '::std::use_facet' declared here
+  171 | inline _LIBCPP_HIDE_FROM_ABI const _Facet& use_facet(const locale& __l) {
+      |                                            ^
+make[2]: *** [CMakeFiles/rtes_core.dir/src/exchange.cpp.o] Error 1
+20 errors generated.
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1112:13: error: no template named 'use_facet' in namespace 'rtes::std'; did you mean '::std::use_facet'?
+ 1112 |   __col_ = &std::use_facet<collate<char_type> >(__loc_);
+      |             ^~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale:171:44: note: '::std::use_facet' declared here
+  171 | inline _LIBCPP_HIDE_FROM_ABI const _Facet& use_facet(const locale& __l) {
+      |                                            ^
+make[2]: *** [CMakeFiles/rtes_core.dir/src/input_validation.cpp.o] Error 1
+In file included from /Users/shivanshu/projects/RTES/src/config.cpp:23:
+In file included from /Users/shivanshu/projects/RTES/include/rtes/input_validation.hpp:7:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:1112:28: error: use of undeclared identifier 'collate'; did you mean 'regex_constants::collate'?
+ 1112 |   __col_ = &std::use_facet<collate<char_type> >(__loc_);
+      |                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/regex:850:3: note: 'regex_constants::collate' declared here
+  850 |   collate  = 1 << 3,
+      |   ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/matching_engine.cpp.o] Error 1
+20 errors generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/config.cpp.o] Error 1
+1 error generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/error_handling.cpp.o] Error 1
+1 error generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/deployment_manager.cpp.o] Error 1
+make[1]: *** [CMakeFiles/rtes_core.dir/all] Error 2
+make: *** [all] Error 2

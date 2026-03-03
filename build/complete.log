@@ -1,0 +1,130 @@
+[  2%] Building CXX object CMakeFiles/rtes_core.dir/src/deployment_manager.cpp.o
+[  6%] Building CXX object CMakeFiles/rtes_core.dir/src/config.cpp.o
+[  6%] Building CXX object CMakeFiles/rtes_core.dir/src/error_handling.cpp.o
+[ 10%] Building CXX object CMakeFiles/rtes_core.dir/src/input_validation.cpp.o
+[ 10%] Building CXX object CMakeFiles/rtes_core.dir/src/memory_safety.cpp.o
+[ 12%] Building CXX object CMakeFiles/rtes_core.dir/src/exchange.cpp.o
+[ 17%] Building CXX object CMakeFiles/rtes_core.dir/src/matching_engine.cpp.o
+[ 17%] Building CXX object CMakeFiles/rtes_core.dir/src/monitoring.cpp.o
+[ 19%] Building CXX object CMakeFiles/rtes_core.dir/src/network_security.cpp.o
+[ 21%] Building CXX object CMakeFiles/rtes_core.dir/src/order_book.cpp.o
+[ 23%] Building CXX object CMakeFiles/rtes_core.dir/src/performance_optimizer.cpp.o
+[ 25%] Building CXX object CMakeFiles/rtes_core.dir/src/production_readiness.cpp.o
+[ 27%] Building CXX object CMakeFiles/rtes_core.dir/src/protocol.cpp.o
+[ 29%] Building CXX object CMakeFiles/rtes_core.dir/src/risk_manager.cpp.o
+[ 31%] Building CXX object CMakeFiles/rtes_core.dir/src/secure_config.cpp.o
+/Users/shivanshu/projects/RTES/src/performance_optimizer.cpp:156:21: error: object of type 'MemoryMonitor' cannot be assigned because its copy assignment operator is implicitly deleted
+  156 |     memory_monitor_ = MemoryMonitor();
+      |                     ^
+/Users/shivanshu/projects/RTES/include/rtes/performance_optimizer.hpp:240:37: note: copy assignment operator of 'MemoryMonitor' is implicitly deleted because field 'total_allocated_' has a deleted copy assignment operator
+  240 |     alignas(64) std::atomic<size_t> total_allocated_{0};
+      |                                     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__atomic/atomic.h:252:11: note: 'operator=' has been explicitly marked deleted here
+  252 |   atomic& operator=(const atomic&)          = delete;
+      |           ^
+[ 34%] Building CXX object CMakeFiles/rtes_core.dir/src/security_utils.cpp.o
+/Users/shivanshu/projects/RTES/src/order_book.cpp:629:42: error: function definition is not allowed here
+  629 | Quantity OrderBook::bid_quantity() const {
+      |                                          ^
+/Users/shivanshu/projects/RTES/src/order_book.cpp:633:42: error: function definition is not allowed here
+  633 | Quantity OrderBook::ask_quantity() const {
+      |                                          ^
+/Users/shivanshu/projects/RTES/src/order_book.cpp:637:78: error: function definition is not allowed here
+  637 | std::vector<OrderBook::DepthLevel> OrderBook::get_depth(size_t levels) const {
+      |                                                                              ^
+/Users/shivanshu/projects/RTES/src/order_book.cpp:664:28: error: function definition is not allowed here
+  664 | void OrderBook::shutdown() {
+      |                            ^
+/Users/shivanshu/projects/RTES/src/order_book.cpp:682:20: error: expected '}'
+  682 | } // namespace rtes
+      |                    ^
+/Users/shivanshu/projects/RTES/src/order_book.cpp:43:16: note: to match this '{'
+   43 | namespace rtes {
+      |                ^
+1 error generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/performance_optimizer.cpp.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+In file included from /Users/shivanshu/projects/RTES/src/production_readiness.cpp:2:
+/Users/shivanshu/projects/RTES/include/rtes/logger.hpp:12:12: error: redefinition of 'LogLevel'
+   12 | enum class LogLevel {
+      |            ^
+/Users/shivanshu/projects/RTES/include/rtes/observability.hpp:15:12: note: previous definition is here
+   15 | enum class LogLevel {
+      |            ^
+In file included from /Users/shivanshu/projects/RTES/src/production_readiness.cpp:2:
+/Users/shivanshu/projects/RTES/include/rtes/logger.hpp:44:56: error: no member named 'FATAL' in 'rtes::LogLevel'
+   44 |     void fatal(const std::string& msg) { log(LogLevel::FATAL, SecurityUtils::sanitize_log_input(msg)); }
+      |                                              ~~~~~~~~~~^
+/Users/shivanshu/projects/RTES/include/rtes/logger.hpp:55:80: error: no member named 'FATAL' in 'rtes::LogLevel'
+   55 |     void fatal_safe(std::string_view fmt, Args&&... args) { log_safe(LogLevel::FATAL, fmt, args...); }
+      |                                                                      ~~~~~~~~~~^
+5 errors generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/order_book.cpp.o] Error 1
+/Users/shivanshu/projects/RTES/src/production_readiness.cpp:113:55: error: no member named 'value_or' in 'rtes::Result<bool>'
+  113 |         config.get_value<bool>("security.enable_tls").value_or(false) == false) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+/Users/shivanshu/projects/RTES/src/risk_manager.cpp:244:51: error: no viable conversion from 'const BoundedString<8>' to 'const std::string' (aka 'const basic_string<char>')
+  244 |     const auto* symbol_config = get_symbol_config(order->symbol);
+      |                                                   ^~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:1022:71: note: candidate constructor not viable: no known conversion from 'const BoundedString<8>' to 'const string &' for 1st argument
+ 1022 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_STRING_INTERNAL_MEMORY_ACCESS basic_string(const basic_string& __str)
+      |                                                                       ^            ~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:1042:55: note: candidate constructor not viable: no known conversion from 'const BoundedString<8>' to 'string &&' for 1st argument
+ 1042 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string(basic_string&& __str)
+      |                                                       ^            ~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:1082:55: note: candidate constructor template not viable: no known conversion from 'const BoundedString<8>' to 'const char *' for 1st argument
+ 1082 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string(const _CharT* __s) {
+      |                                                       ^            ~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:1216:55: note: candidate constructor not viable: no known conversion from 'const BoundedString<8>' to 'initializer_list<char>' for 1st argument
+ 1216 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 basic_string(initializer_list<_CharT> __il) {
+      |                                                       ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:1012:64: note: explicit constructor is not a candidate
+ 1012 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit basic_string(const allocator_type& __a)
+      |                                                                ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:1174:42: note: explicit constructor is not a candidate
+ 1174 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 explicit basic_string(const _Tp& __t) {
+      |                                          ^
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:121:5: note: candidate function
+  121 |     operator const char*() const noexcept { return data_.data(); }
+      |     ^
+/Users/shivanshu/projects/RTES/include/rtes/memory_safety.hpp:122:5: note: candidate function
+  122 |     operator std::string_view() const noexcept { return std::string_view(data_.data(), length_); }
+      |     ^
+/Users/shivanshu/projects/RTES/include/rtes/risk_manager.hpp:102:62: note: passing argument to parameter 'symbol' here
+  102 |     const SymbolConfig* get_symbol_config(const std::string& symbol) const;
+      |                                                              ^
+/Users/shivanshu/projects/RTES/src/risk_manager.cpp:285:28: error: no matching member function for call to 'find'
+  285 |     return symbol_configs_.find(order->symbol) != symbol_configs_.end();
+      |            ~~~~~~~~~~~~~~~~^~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map:1394:40: note: candidate function not viable: no known conversion from 'const BoundedString<8>' to 'const key_type' (aka 'const std::string') for 1st argument
+ 1394 |   _LIBCPP_HIDE_FROM_ABI const_iterator find(const key_type& __k) const { return __table_.find(__k); }
+      |                                        ^    ~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map:1393:34: note: candidate function not viable: 'this' argument has type 'const std::unordered_map<std::string, SymbolConfig>' (aka 'const unordered_map<basic_string<char>, rtes::SymbolConfig>'), but method is not marked const
+ 1393 |   _LIBCPP_HIDE_FROM_ABI iterator find(const key_type& __k) { return __table_.find(__k); }
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map:1397:34: note: candidate template ignored: requirement '__is_transparent_v<std::hash<std::string>, rtes::BoundedString<8>>' was not satisfied [with _K2 = BoundedString<8>]
+ 1397 |   _LIBCPP_HIDE_FROM_ABI iterator find(const _K2& __k) {
+      |                                  ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map:1401:40: note: candidate template ignored: requirement '__is_transparent_v<std::hash<std::string>, rtes::BoundedString<8>>' was not satisfied [with _K2 = BoundedString<8>]
+ 1401 |   _LIBCPP_HIDE_FROM_ABI const_iterator find(const _K2& __k) const {
+      |                                        ^
+4 errors generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/production_readiness.cpp.o] Error 1
+2 errors generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/risk_manager.cpp.o] Error 1
+/Users/shivanshu/projects/RTES/src/security_utils.cpp:190:9: error: use of undeclared identifier 'LOG_WARN_SAFE'
+  190 |         LOG_WARN_SAFE("Invalid token length");
+      |         ^
+/Users/shivanshu/projects/RTES/src/security_utils.cpp:196:9: error: use of undeclared identifier 'LOG_WARN_SAFE'
+  196 |         LOG_WARN_SAFE("Token contains invalid characters");
+      |         ^
+/Users/shivanshu/projects/RTES/src/security_utils.cpp:208:5: error: use of undeclared identifier 'LOG_WARN_SAFE'
+  208 |     LOG_WARN_SAFE("Using mock authentication - NOT FOR PRODUCTION USE");
+      |     ^
+/Users/shivanshu/projects/RTES/src/security_utils.cpp:213:9: error: use of undeclared identifier 'LOG_ERROR_SAFE'
+  213 |         LOG_ERROR_SAFE("Mock authentication disabled in non-development mode");
+      |         ^
+4 errors generated.
+make[2]: *** [CMakeFiles/rtes_core.dir/src/security_utils.cpp.o] Error 1
+make[1]: *** [CMakeFiles/rtes_core.dir/all] Error 2
+make: *** [all] Error 2
