@@ -1,0 +1,40 @@
+# Development Dockerfile with debugging tools
+FROM ubuntu:22.04
+
+# Install development dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    libgtest-dev \
+    pkg-config \
+    gdb \
+    valgrind \
+    strace \
+    htop \
+    vim \
+    curl \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages for tools
+RUN pip3 install requests
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy source code
+COPY . .
+
+# Build in debug mode
+RUN cmake -B build -DCMAKE_BUILD_TYPE=Debug && \
+    cmake --build build -j$(nproc)
+
+# Set up environment
+ENV PATH="/workspace/build:${PATH}"
+
+# Expose ports
+EXPOSE 8888 8080 9999/udp
+
+# Default to bash for development
+CMD ["/bin/bash"]
