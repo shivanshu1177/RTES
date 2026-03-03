@@ -7,11 +7,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Compiler flags
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -flto -DNDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -fsanitize=address,undefined -fno-omit-frame-pointer")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 
 # Find packages
 find_package(Threads REQUIRED)
-find_package(PkgConfig REQUIRED)
 
 # Include directories
 include_directories(include)
@@ -26,27 +25,35 @@ target_link_libraries(rtes_core Threads::Threads)
 add_executable(trading_exchange src/main.cpp)
 target_link_libraries(trading_exchange rtes_core)
 
-# Client simulator
-add_executable(client_simulator tools/client_simulator.cpp)
-target_link_libraries(client_simulator rtes_core)
+# Tools
+add_executable(bench_memory_pool tools/bench_memory_pool.cpp)
+target_link_libraries(bench_memory_pool rtes_core)
 
-# Benchmark executable
-add_executable(bench_exchange tools/bench_exchange.cpp)
-target_link_libraries(bench_exchange rtes_core)
+add_executable(bench_matching tools/bench_matching.cpp)
+target_link_libraries(bench_matching rtes_core)
 
 # Enable testing
 enable_testing()
 find_package(GTest QUIET)
-if(GTest_FOUND)
+if(NOT GTest_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.14.0
+    )
+    FetchContent_MakeAvailable(googletest)
+endif()
+
+if(GTest_FOUND OR TARGET gtest)
     file(GLOB_RECURSE TEST_SOURCES "tests/*.cpp")
     add_executable(rtes_tests ${TEST_SOURCES})
-    target_link_libraries(rtes_tests rtes_core GTest::gtest GTest::gtest_main)
+    if(TARGET GTest::gtest)
+        target_link_libraries(rtes_tests rtes_core GTest::gtest GTest::gtest_main)
+    else()
+        target_link_libraries(rtes_tests rtes_core gtest gtest_main)
+    endif()
     
     include(GoogleTest)
     gtest_discover_tests(rtes_tests)
 endif()
-
-# Install targets
-install(TARGETS trading_exchange client_simulator bench_exchange
-        RUNTIME DESTINATION bin)
-install(DIRECTORY configs/ DESTINATION etc/rtes/)
