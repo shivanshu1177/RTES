@@ -1,77 +1,55 @@
-#include "rtes/config.hpp"
+#include "rtes/types.hpp"
 #include "rtes/logger.hpp"
+#include "rtes/memory_pool.hpp"
+#include "rtes/order_book.hpp"
 #include <iostream>
-#include <csignal>
-#include <atomic>
+#include <thread>
+#include <chrono>
 
-namespace rtes {
+using namespace rtes;
 
-std::atomic<bool> shutdown_requested{false};
-
-void signal_handler(int signal) {
-    LOG_INFO("Received signal " + std::to_string(signal) + ", initiating graceful shutdown");
-    shutdown_requested.store(true);
+void trade_callback(const Trade& trade) {
+    LOG_INFO("Trade executed: " + std::to_string(trade.quantity) + 
+             " @ " + std::to_string(trade.price) + 
+             " for " + trade.symbol);
 }
 
-class Exchange {
-public:
-    explicit Exchange(std::unique_ptr<Config> config) 
-        : config_(std::move(config)) {
-        LOG_INFO("Initializing RTES Exchange: " + config_->exchange.name);
-    }
+int main() {
+    LOG_INFO("Starting RTES Trading Exchange");
     
-    void run() {
-        LOG_INFO("Starting exchange on TCP port " + std::to_string(config_->exchange.tcp_port));
-        LOG_INFO("Market data multicast: " + config_->exchange.udp_multicast_group + 
-                 ":" + std::to_string(config_->exchange.udp_port));
-        LOG_INFO("Metrics endpoint: http://localhost:" + std::to_string(config_->exchange.metrics_port));
-        
-        // Main event loop
-        while (!shutdown_requested.load()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-        
-        LOG_INFO("Exchange shutdown complete");
-    }
-
-private:
-    std::unique_ptr<Config> config_;
-};
-
-} // namespace rtes
-
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <config_file>" << std::endl;
-        return 1;
-    }
+    OrderPool pool(1000);
+    OrderBook book("AAPL", pool, trade_callback);
     
-    // Setup signal handlers
-    std::signal(SIGINT, rtes::signal_handler);
-    std::signal(SIGTERM, rtes::signal_handler);
+    // Create some test orders
+    auto* buy_order = pool.acquire();
+    *buy_order = Order{
+        .order_id = 1,
+        .symbol = "AAPL",
+        .side = Side::BUY,
+        .type = OrderType::LIMIT,
+        .price = 15000, // $150.00
+        .quantity = 100
+    };
     
-    try {
-        // Load configuration
-        auto config = rtes::Config::load_from_file(argv[1]);
-        
-        // Configure logger
-        auto& logger = rtes::Logger::instance();
-        if (config->logging.level == "DEBUG") logger.set_level(rtes::LogLevel::DEBUG);
-        else if (config->logging.level == "INFO") logger.set_level(rtes::LogLevel::INFO);
-        else if (config->logging.level == "WARN") logger.set_level(rtes::LogLevel::WARN);
-        else if (config->logging.level == "ERROR") logger.set_level(rtes::LogLevel::ERROR);
-        
-        logger.set_rate_limit(std::chrono::milliseconds(config->logging.rate_limit_ms));
-        logger.enable_structured(config->logging.enable_structured);
-        
-        // Create and run exchange
-        rtes::Exchange exchange(std::move(config));
-        exchange.run();
-        
-    } catch (const std::exception& e) {
-        std::cerr << "Fatal error: " << e.what() << std::endl;
-        return 1;
-    }
+    auto* sell_order = pool.acquire();
+    *sell_order = Order{
+        .order_id = 2,
+        .symbol = "AAPL",
+        .side = Side::SELL,
+        .type = OrderType::LIMIT,
+        .price = 14950, // $149.50
+        .quantity = 50
+    };
     
+    book.add_order(buy_order);
+    book.add_order(sell_order);
+    
+    LOG_INFO("Best bid: " + std::to_string(book.best_bid()));
+    LOG_INFO("Best ask: " + std::to_string(book.best_ask()));
+    LOG_INFO("Orders in book: " + std::to_string(book.order_count()));
+    
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    
+    LOG_INFO("RTES Trading Exchange stopped");
     return 0;
 }
