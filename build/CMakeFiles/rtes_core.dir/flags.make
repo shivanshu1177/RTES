@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/shivanshu/projects/RTES/include -isystem /opt/homebrew/Cellar/openssl@3/3.6.0/include
+CXX_INCLUDES = -I/Users/shivanshu/projects/RTES/include
 
 CXX_FLAGSarm64 = -O3 -march=native -flto -DNDEBUG -std=c++20 -arch arm64
 

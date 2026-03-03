@@ -97,7 +97,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"gmock\" \"gtest\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -198,32 +198,6 @@ trading_exchange/fast:
 .PHONY : trading_exchange/fast
 
 #=============================================================================
-# Target rules for targets named client_simulator
-
-# Build rule for target.
-client_simulator: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 client_simulator
-.PHONY : client_simulator
-
-# fast build rule for target.
-client_simulator/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client_simulator.dir/build.make CMakeFiles/client_simulator.dir/build
-.PHONY : client_simulator/fast
-
-#=============================================================================
-# Target rules for targets named bench_exchange
-
-# Build rule for target.
-bench_exchange: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 bench_exchange
-.PHONY : bench_exchange
-
-# fast build rule for target.
-bench_exchange/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_exchange.dir/build.make CMakeFiles/bench_exchange.dir/build
-.PHONY : bench_exchange/fast
-
-#=============================================================================
 # Target rules for targets named bench_memory_pool
 
 # Build rule for target.
@@ -250,296 +224,69 @@ bench_matching/fast:
 .PHONY : bench_matching/fast
 
 #=============================================================================
-# Target rules for targets named tcp_client
+# Target rules for targets named rtes_tests
 
 # Build rule for target.
-tcp_client: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tcp_client
-.PHONY : tcp_client
+rtes_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 rtes_tests
+.PHONY : rtes_tests
 
 # fast build rule for target.
-tcp_client/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_client.dir/build.make CMakeFiles/tcp_client.dir/build
-.PHONY : tcp_client/fast
+rtes_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_tests.dir/build.make CMakeFiles/rtes_tests.dir/build
+.PHONY : rtes_tests/fast
 
 #=============================================================================
-# Target rules for targets named udp_receiver
+# Target rules for targets named gmock
 
 # Build rule for target.
-udp_receiver: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 udp_receiver
-.PHONY : udp_receiver
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
 
 # fast build rule for target.
-udp_receiver/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/udp_receiver.dir/build.make CMakeFiles/udp_receiver.dir/build
-.PHONY : udp_receiver/fast
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
 
 #=============================================================================
-# Target rules for targets named load_generator
+# Target rules for targets named gmock_main
 
 # Build rule for target.
-load_generator: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 load_generator
-.PHONY : load_generator
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
 
 # fast build rule for target.
-load_generator/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/load_generator.dir/build.make CMakeFiles/load_generator.dir/build
-.PHONY : load_generator/fast
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
 
 #=============================================================================
-# Target rules for targets named perf_harness
+# Target rules for targets named gtest
 
 # Build rule for target.
-perf_harness: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 perf_harness
-.PHONY : perf_harness
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
 
 # fast build rule for target.
-perf_harness/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/perf_harness.dir/build.make CMakeFiles/perf_harness.dir/build
-.PHONY : perf_harness/fast
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
 
-src/auth_middleware.o: src/auth_middleware.cpp.o
-.PHONY : src/auth_middleware.o
+#=============================================================================
+# Target rules for targets named gtest_main
 
-# target to build an object file
-src/auth_middleware.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/auth_middleware.cpp.o
-.PHONY : src/auth_middleware.cpp.o
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
 
-src/auth_middleware.i: src/auth_middleware.cpp.i
-.PHONY : src/auth_middleware.i
-
-# target to preprocess a source file
-src/auth_middleware.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/auth_middleware.cpp.i
-.PHONY : src/auth_middleware.cpp.i
-
-src/auth_middleware.s: src/auth_middleware.cpp.s
-.PHONY : src/auth_middleware.s
-
-# target to generate assembly for a file
-src/auth_middleware.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/auth_middleware.cpp.s
-.PHONY : src/auth_middleware.cpp.s
-
-src/client_base.o: src/client_base.cpp.o
-.PHONY : src/client_base.o
-
-# target to build an object file
-src/client_base.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/client_base.cpp.o
-.PHONY : src/client_base.cpp.o
-
-src/client_base.i: src/client_base.cpp.i
-.PHONY : src/client_base.i
-
-# target to preprocess a source file
-src/client_base.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/client_base.cpp.i
-.PHONY : src/client_base.cpp.i
-
-src/client_base.s: src/client_base.cpp.s
-.PHONY : src/client_base.s
-
-# target to generate assembly for a file
-src/client_base.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/client_base.cpp.s
-.PHONY : src/client_base.cpp.s
-
-src/config.o: src/config.cpp.o
-.PHONY : src/config.o
-
-# target to build an object file
-src/config.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/config.cpp.o
-.PHONY : src/config.cpp.o
-
-src/config.i: src/config.cpp.i
-.PHONY : src/config.i
-
-# target to preprocess a source file
-src/config.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/config.cpp.i
-.PHONY : src/config.cpp.i
-
-src/config.s: src/config.cpp.s
-.PHONY : src/config.s
-
-# target to generate assembly for a file
-src/config.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/config.cpp.s
-.PHONY : src/config.cpp.s
-
-src/dashboard.o: src/dashboard.cpp.o
-.PHONY : src/dashboard.o
-
-# target to build an object file
-src/dashboard.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/dashboard.cpp.o
-.PHONY : src/dashboard.cpp.o
-
-src/dashboard.i: src/dashboard.cpp.i
-.PHONY : src/dashboard.i
-
-# target to preprocess a source file
-src/dashboard.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/dashboard.cpp.i
-.PHONY : src/dashboard.cpp.i
-
-src/dashboard.s: src/dashboard.cpp.s
-.PHONY : src/dashboard.s
-
-# target to generate assembly for a file
-src/dashboard.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/dashboard.cpp.s
-.PHONY : src/dashboard.cpp.s
-
-src/deployment_manager.o: src/deployment_manager.cpp.o
-.PHONY : src/deployment_manager.o
-
-# target to build an object file
-src/deployment_manager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/deployment_manager.cpp.o
-.PHONY : src/deployment_manager.cpp.o
-
-src/deployment_manager.i: src/deployment_manager.cpp.i
-.PHONY : src/deployment_manager.i
-
-# target to preprocess a source file
-src/deployment_manager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/deployment_manager.cpp.i
-.PHONY : src/deployment_manager.cpp.i
-
-src/deployment_manager.s: src/deployment_manager.cpp.s
-.PHONY : src/deployment_manager.s
-
-# target to generate assembly for a file
-src/deployment_manager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/deployment_manager.cpp.s
-.PHONY : src/deployment_manager.cpp.s
-
-src/error_handling.o: src/error_handling.cpp.o
-.PHONY : src/error_handling.o
-
-# target to build an object file
-src/error_handling.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/error_handling.cpp.o
-.PHONY : src/error_handling.cpp.o
-
-src/error_handling.i: src/error_handling.cpp.i
-.PHONY : src/error_handling.i
-
-# target to preprocess a source file
-src/error_handling.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/error_handling.cpp.i
-.PHONY : src/error_handling.cpp.i
-
-src/error_handling.s: src/error_handling.cpp.s
-.PHONY : src/error_handling.s
-
-# target to generate assembly for a file
-src/error_handling.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/error_handling.cpp.s
-.PHONY : src/error_handling.cpp.s
-
-src/exchange.o: src/exchange.cpp.o
-.PHONY : src/exchange.o
-
-# target to build an object file
-src/exchange.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/exchange.cpp.o
-.PHONY : src/exchange.cpp.o
-
-src/exchange.i: src/exchange.cpp.i
-.PHONY : src/exchange.i
-
-# target to preprocess a source file
-src/exchange.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/exchange.cpp.i
-.PHONY : src/exchange.cpp.i
-
-src/exchange.s: src/exchange.cpp.s
-.PHONY : src/exchange.s
-
-# target to generate assembly for a file
-src/exchange.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/exchange.cpp.s
-.PHONY : src/exchange.cpp.s
-
-src/http_server.o: src/http_server.cpp.o
-.PHONY : src/http_server.o
-
-# target to build an object file
-src/http_server.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/http_server.cpp.o
-.PHONY : src/http_server.cpp.o
-
-src/http_server.i: src/http_server.cpp.i
-.PHONY : src/http_server.i
-
-# target to preprocess a source file
-src/http_server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/http_server.cpp.i
-.PHONY : src/http_server.cpp.i
-
-src/http_server.s: src/http_server.cpp.s
-.PHONY : src/http_server.s
-
-# target to generate assembly for a file
-src/http_server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/http_server.cpp.s
-.PHONY : src/http_server.cpp.s
-
-src/input_validation.o: src/input_validation.cpp.o
-.PHONY : src/input_validation.o
-
-# target to build an object file
-src/input_validation.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/input_validation.cpp.o
-.PHONY : src/input_validation.cpp.o
-
-src/input_validation.i: src/input_validation.cpp.i
-.PHONY : src/input_validation.i
-
-# target to preprocess a source file
-src/input_validation.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/input_validation.cpp.i
-.PHONY : src/input_validation.cpp.i
-
-src/input_validation.s: src/input_validation.cpp.s
-.PHONY : src/input_validation.s
-
-# target to generate assembly for a file
-src/input_validation.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/input_validation.cpp.s
-.PHONY : src/input_validation.cpp.s
-
-src/logger.o: src/logger.cpp.o
-.PHONY : src/logger.o
-
-# target to build an object file
-src/logger.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/logger.cpp.o
-.PHONY : src/logger.cpp.o
-
-src/logger.i: src/logger.cpp.i
-.PHONY : src/logger.i
-
-# target to preprocess a source file
-src/logger.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/logger.cpp.i
-.PHONY : src/logger.cpp.i
-
-src/logger.s: src/logger.cpp.s
-.PHONY : src/logger.s
-
-# target to generate assembly for a file
-src/logger.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/logger.cpp.s
-.PHONY : src/logger.cpp.s
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -565,150 +312,6 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/trading_exchange.dir/build.make CMakeFiles/trading_exchange.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-src/matching_engine.o: src/matching_engine.cpp.o
-.PHONY : src/matching_engine.o
-
-# target to build an object file
-src/matching_engine.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/matching_engine.cpp.o
-.PHONY : src/matching_engine.cpp.o
-
-src/matching_engine.i: src/matching_engine.cpp.i
-.PHONY : src/matching_engine.i
-
-# target to preprocess a source file
-src/matching_engine.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/matching_engine.cpp.i
-.PHONY : src/matching_engine.cpp.i
-
-src/matching_engine.s: src/matching_engine.cpp.s
-.PHONY : src/matching_engine.s
-
-# target to generate assembly for a file
-src/matching_engine.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/matching_engine.cpp.s
-.PHONY : src/matching_engine.cpp.s
-
-src/memory_safety.o: src/memory_safety.cpp.o
-.PHONY : src/memory_safety.o
-
-# target to build an object file
-src/memory_safety.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/memory_safety.cpp.o
-.PHONY : src/memory_safety.cpp.o
-
-src/memory_safety.i: src/memory_safety.cpp.i
-.PHONY : src/memory_safety.i
-
-# target to preprocess a source file
-src/memory_safety.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/memory_safety.cpp.i
-.PHONY : src/memory_safety.cpp.i
-
-src/memory_safety.s: src/memory_safety.cpp.s
-.PHONY : src/memory_safety.s
-
-# target to generate assembly for a file
-src/memory_safety.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/memory_safety.cpp.s
-.PHONY : src/memory_safety.cpp.s
-
-src/metrics.o: src/metrics.cpp.o
-.PHONY : src/metrics.o
-
-# target to build an object file
-src/metrics.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/metrics.cpp.o
-.PHONY : src/metrics.cpp.o
-
-src/metrics.i: src/metrics.cpp.i
-.PHONY : src/metrics.i
-
-# target to preprocess a source file
-src/metrics.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/metrics.cpp.i
-.PHONY : src/metrics.cpp.i
-
-src/metrics.s: src/metrics.cpp.s
-.PHONY : src/metrics.s
-
-# target to generate assembly for a file
-src/metrics.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/metrics.cpp.s
-.PHONY : src/metrics.cpp.s
-
-src/monitoring.o: src/monitoring.cpp.o
-.PHONY : src/monitoring.o
-
-# target to build an object file
-src/monitoring.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/monitoring.cpp.o
-.PHONY : src/monitoring.cpp.o
-
-src/monitoring.i: src/monitoring.cpp.i
-.PHONY : src/monitoring.i
-
-# target to preprocess a source file
-src/monitoring.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/monitoring.cpp.i
-.PHONY : src/monitoring.cpp.i
-
-src/monitoring.s: src/monitoring.cpp.s
-.PHONY : src/monitoring.s
-
-# target to generate assembly for a file
-src/monitoring.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/monitoring.cpp.s
-.PHONY : src/monitoring.cpp.s
-
-src/network_security.o: src/network_security.cpp.o
-.PHONY : src/network_security.o
-
-# target to build an object file
-src/network_security.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/network_security.cpp.o
-.PHONY : src/network_security.cpp.o
-
-src/network_security.i: src/network_security.cpp.i
-.PHONY : src/network_security.i
-
-# target to preprocess a source file
-src/network_security.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/network_security.cpp.i
-.PHONY : src/network_security.cpp.i
-
-src/network_security.s: src/network_security.cpp.s
-.PHONY : src/network_security.s
-
-# target to generate assembly for a file
-src/network_security.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/network_security.cpp.s
-.PHONY : src/network_security.cpp.s
-
-src/observability.o: src/observability.cpp.o
-.PHONY : src/observability.o
-
-# target to build an object file
-src/observability.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/observability.cpp.o
-.PHONY : src/observability.cpp.o
-
-src/observability.i: src/observability.cpp.i
-.PHONY : src/observability.i
-
-# target to preprocess a source file
-src/observability.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/observability.cpp.i
-.PHONY : src/observability.cpp.i
-
-src/observability.s: src/observability.cpp.s
-.PHONY : src/observability.s
-
-# target to generate assembly for a file
-src/observability.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/observability.cpp.s
-.PHONY : src/observability.cpp.s
-
 src/order_book.o: src/order_book.cpp.o
 .PHONY : src/order_book.o
 
@@ -733,293 +336,29 @@ src/order_book.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/order_book.cpp.s
 .PHONY : src/order_book.cpp.s
 
-src/performance_optimizer.o: src/performance_optimizer.cpp.o
-.PHONY : src/performance_optimizer.o
+tests/test_order_book.o: tests/test_order_book.cpp.o
+.PHONY : tests/test_order_book.o
 
 # target to build an object file
-src/performance_optimizer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/performance_optimizer.cpp.o
-.PHONY : src/performance_optimizer.cpp.o
+tests/test_order_book.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_tests.dir/build.make CMakeFiles/rtes_tests.dir/tests/test_order_book.cpp.o
+.PHONY : tests/test_order_book.cpp.o
 
-src/performance_optimizer.i: src/performance_optimizer.cpp.i
-.PHONY : src/performance_optimizer.i
-
-# target to preprocess a source file
-src/performance_optimizer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/performance_optimizer.cpp.i
-.PHONY : src/performance_optimizer.cpp.i
-
-src/performance_optimizer.s: src/performance_optimizer.cpp.s
-.PHONY : src/performance_optimizer.s
-
-# target to generate assembly for a file
-src/performance_optimizer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/performance_optimizer.cpp.s
-.PHONY : src/performance_optimizer.cpp.s
-
-src/production_readiness.o: src/production_readiness.cpp.o
-.PHONY : src/production_readiness.o
-
-# target to build an object file
-src/production_readiness.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/production_readiness.cpp.o
-.PHONY : src/production_readiness.cpp.o
-
-src/production_readiness.i: src/production_readiness.cpp.i
-.PHONY : src/production_readiness.i
+tests/test_order_book.i: tests/test_order_book.cpp.i
+.PHONY : tests/test_order_book.i
 
 # target to preprocess a source file
-src/production_readiness.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/production_readiness.cpp.i
-.PHONY : src/production_readiness.cpp.i
+tests/test_order_book.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_tests.dir/build.make CMakeFiles/rtes_tests.dir/tests/test_order_book.cpp.i
+.PHONY : tests/test_order_book.cpp.i
 
-src/production_readiness.s: src/production_readiness.cpp.s
-.PHONY : src/production_readiness.s
-
-# target to generate assembly for a file
-src/production_readiness.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/production_readiness.cpp.s
-.PHONY : src/production_readiness.cpp.s
-
-src/protocol.o: src/protocol.cpp.o
-.PHONY : src/protocol.o
-
-# target to build an object file
-src/protocol.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/protocol.cpp.o
-.PHONY : src/protocol.cpp.o
-
-src/protocol.i: src/protocol.cpp.i
-.PHONY : src/protocol.i
-
-# target to preprocess a source file
-src/protocol.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/protocol.cpp.i
-.PHONY : src/protocol.cpp.i
-
-src/protocol.s: src/protocol.cpp.s
-.PHONY : src/protocol.s
+tests/test_order_book.s: tests/test_order_book.cpp.s
+.PHONY : tests/test_order_book.s
 
 # target to generate assembly for a file
-src/protocol.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/protocol.cpp.s
-.PHONY : src/protocol.cpp.s
-
-src/risk_manager.o: src/risk_manager.cpp.o
-.PHONY : src/risk_manager.o
-
-# target to build an object file
-src/risk_manager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/risk_manager.cpp.o
-.PHONY : src/risk_manager.cpp.o
-
-src/risk_manager.i: src/risk_manager.cpp.i
-.PHONY : src/risk_manager.i
-
-# target to preprocess a source file
-src/risk_manager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/risk_manager.cpp.i
-.PHONY : src/risk_manager.cpp.i
-
-src/risk_manager.s: src/risk_manager.cpp.s
-.PHONY : src/risk_manager.s
-
-# target to generate assembly for a file
-src/risk_manager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/risk_manager.cpp.s
-.PHONY : src/risk_manager.cpp.s
-
-src/secure_config.o: src/secure_config.cpp.o
-.PHONY : src/secure_config.o
-
-# target to build an object file
-src/secure_config.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/secure_config.cpp.o
-.PHONY : src/secure_config.cpp.o
-
-src/secure_config.i: src/secure_config.cpp.i
-.PHONY : src/secure_config.i
-
-# target to preprocess a source file
-src/secure_config.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/secure_config.cpp.i
-.PHONY : src/secure_config.cpp.i
-
-src/secure_config.s: src/secure_config.cpp.s
-.PHONY : src/secure_config.s
-
-# target to generate assembly for a file
-src/secure_config.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/secure_config.cpp.s
-.PHONY : src/secure_config.cpp.s
-
-src/security_utils.o: src/security_utils.cpp.o
-.PHONY : src/security_utils.o
-
-# target to build an object file
-src/security_utils.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/security_utils.cpp.o
-.PHONY : src/security_utils.cpp.o
-
-src/security_utils.i: src/security_utils.cpp.i
-.PHONY : src/security_utils.i
-
-# target to preprocess a source file
-src/security_utils.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/security_utils.cpp.i
-.PHONY : src/security_utils.cpp.i
-
-src/security_utils.s: src/security_utils.cpp.s
-.PHONY : src/security_utils.s
-
-# target to generate assembly for a file
-src/security_utils.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/security_utils.cpp.s
-.PHONY : src/security_utils.cpp.s
-
-src/strategies.o: src/strategies.cpp.o
-.PHONY : src/strategies.o
-
-# target to build an object file
-src/strategies.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/strategies.cpp.o
-.PHONY : src/strategies.cpp.o
-
-src/strategies.i: src/strategies.cpp.i
-.PHONY : src/strategies.i
-
-# target to preprocess a source file
-src/strategies.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/strategies.cpp.i
-.PHONY : src/strategies.cpp.i
-
-src/strategies.s: src/strategies.cpp.s
-.PHONY : src/strategies.s
-
-# target to generate assembly for a file
-src/strategies.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/strategies.cpp.s
-.PHONY : src/strategies.cpp.s
-
-src/tcp_gateway.o: src/tcp_gateway.cpp.o
-.PHONY : src/tcp_gateway.o
-
-# target to build an object file
-src/tcp_gateway.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/tcp_gateway.cpp.o
-.PHONY : src/tcp_gateway.cpp.o
-
-src/tcp_gateway.i: src/tcp_gateway.cpp.i
-.PHONY : src/tcp_gateway.i
-
-# target to preprocess a source file
-src/tcp_gateway.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/tcp_gateway.cpp.i
-.PHONY : src/tcp_gateway.cpp.i
-
-src/tcp_gateway.s: src/tcp_gateway.cpp.s
-.PHONY : src/tcp_gateway.s
-
-# target to generate assembly for a file
-src/tcp_gateway.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/tcp_gateway.cpp.s
-.PHONY : src/tcp_gateway.cpp.s
-
-src/thread_safety.o: src/thread_safety.cpp.o
-.PHONY : src/thread_safety.o
-
-# target to build an object file
-src/thread_safety.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/thread_safety.cpp.o
-.PHONY : src/thread_safety.cpp.o
-
-src/thread_safety.i: src/thread_safety.cpp.i
-.PHONY : src/thread_safety.i
-
-# target to preprocess a source file
-src/thread_safety.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/thread_safety.cpp.i
-.PHONY : src/thread_safety.cpp.i
-
-src/thread_safety.s: src/thread_safety.cpp.s
-.PHONY : src/thread_safety.s
-
-# target to generate assembly for a file
-src/thread_safety.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/thread_safety.cpp.s
-.PHONY : src/thread_safety.cpp.s
-
-src/transaction.o: src/transaction.cpp.o
-.PHONY : src/transaction.o
-
-# target to build an object file
-src/transaction.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/transaction.cpp.o
-.PHONY : src/transaction.cpp.o
-
-src/transaction.i: src/transaction.cpp.i
-.PHONY : src/transaction.i
-
-# target to preprocess a source file
-src/transaction.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/transaction.cpp.i
-.PHONY : src/transaction.cpp.i
-
-src/transaction.s: src/transaction.cpp.s
-.PHONY : src/transaction.s
-
-# target to generate assembly for a file
-src/transaction.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/transaction.cpp.s
-.PHONY : src/transaction.cpp.s
-
-src/udp_publisher.o: src/udp_publisher.cpp.o
-.PHONY : src/udp_publisher.o
-
-# target to build an object file
-src/udp_publisher.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/udp_publisher.cpp.o
-.PHONY : src/udp_publisher.cpp.o
-
-src/udp_publisher.i: src/udp_publisher.cpp.i
-.PHONY : src/udp_publisher.i
-
-# target to preprocess a source file
-src/udp_publisher.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/udp_publisher.cpp.i
-.PHONY : src/udp_publisher.cpp.i
-
-src/udp_publisher.s: src/udp_publisher.cpp.s
-.PHONY : src/udp_publisher.s
-
-# target to generate assembly for a file
-src/udp_publisher.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_core.dir/build.make CMakeFiles/rtes_core.dir/src/udp_publisher.cpp.s
-.PHONY : src/udp_publisher.cpp.s
-
-tools/bench_exchange.o: tools/bench_exchange.cpp.o
-.PHONY : tools/bench_exchange.o
-
-# target to build an object file
-tools/bench_exchange.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_exchange.dir/build.make CMakeFiles/bench_exchange.dir/tools/bench_exchange.cpp.o
-.PHONY : tools/bench_exchange.cpp.o
-
-tools/bench_exchange.i: tools/bench_exchange.cpp.i
-.PHONY : tools/bench_exchange.i
-
-# target to preprocess a source file
-tools/bench_exchange.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_exchange.dir/build.make CMakeFiles/bench_exchange.dir/tools/bench_exchange.cpp.i
-.PHONY : tools/bench_exchange.cpp.i
-
-tools/bench_exchange.s: tools/bench_exchange.cpp.s
-.PHONY : tools/bench_exchange.s
-
-# target to generate assembly for a file
-tools/bench_exchange.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_exchange.dir/build.make CMakeFiles/bench_exchange.dir/tools/bench_exchange.cpp.s
-.PHONY : tools/bench_exchange.cpp.s
+tests/test_order_book.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rtes_tests.dir/build.make CMakeFiles/rtes_tests.dir/tests/test_order_book.cpp.s
+.PHONY : tests/test_order_book.cpp.s
 
 tools/bench_matching.o: tools/bench_matching.cpp.o
 .PHONY : tools/bench_matching.o
@@ -1069,126 +408,6 @@ tools/bench_memory_pool.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/bench_memory_pool.dir/build.make CMakeFiles/bench_memory_pool.dir/tools/bench_memory_pool.cpp.s
 .PHONY : tools/bench_memory_pool.cpp.s
 
-tools/client_simulator.o: tools/client_simulator.cpp.o
-.PHONY : tools/client_simulator.o
-
-# target to build an object file
-tools/client_simulator.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client_simulator.dir/build.make CMakeFiles/client_simulator.dir/tools/client_simulator.cpp.o
-.PHONY : tools/client_simulator.cpp.o
-
-tools/client_simulator.i: tools/client_simulator.cpp.i
-.PHONY : tools/client_simulator.i
-
-# target to preprocess a source file
-tools/client_simulator.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client_simulator.dir/build.make CMakeFiles/client_simulator.dir/tools/client_simulator.cpp.i
-.PHONY : tools/client_simulator.cpp.i
-
-tools/client_simulator.s: tools/client_simulator.cpp.s
-.PHONY : tools/client_simulator.s
-
-# target to generate assembly for a file
-tools/client_simulator.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client_simulator.dir/build.make CMakeFiles/client_simulator.dir/tools/client_simulator.cpp.s
-.PHONY : tools/client_simulator.cpp.s
-
-tools/load_generator.o: tools/load_generator.cpp.o
-.PHONY : tools/load_generator.o
-
-# target to build an object file
-tools/load_generator.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/load_generator.dir/build.make CMakeFiles/load_generator.dir/tools/load_generator.cpp.o
-.PHONY : tools/load_generator.cpp.o
-
-tools/load_generator.i: tools/load_generator.cpp.i
-.PHONY : tools/load_generator.i
-
-# target to preprocess a source file
-tools/load_generator.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/load_generator.dir/build.make CMakeFiles/load_generator.dir/tools/load_generator.cpp.i
-.PHONY : tools/load_generator.cpp.i
-
-tools/load_generator.s: tools/load_generator.cpp.s
-.PHONY : tools/load_generator.s
-
-# target to generate assembly for a file
-tools/load_generator.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/load_generator.dir/build.make CMakeFiles/load_generator.dir/tools/load_generator.cpp.s
-.PHONY : tools/load_generator.cpp.s
-
-tools/perf_harness.o: tools/perf_harness.cpp.o
-.PHONY : tools/perf_harness.o
-
-# target to build an object file
-tools/perf_harness.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/perf_harness.dir/build.make CMakeFiles/perf_harness.dir/tools/perf_harness.cpp.o
-.PHONY : tools/perf_harness.cpp.o
-
-tools/perf_harness.i: tools/perf_harness.cpp.i
-.PHONY : tools/perf_harness.i
-
-# target to preprocess a source file
-tools/perf_harness.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/perf_harness.dir/build.make CMakeFiles/perf_harness.dir/tools/perf_harness.cpp.i
-.PHONY : tools/perf_harness.cpp.i
-
-tools/perf_harness.s: tools/perf_harness.cpp.s
-.PHONY : tools/perf_harness.s
-
-# target to generate assembly for a file
-tools/perf_harness.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/perf_harness.dir/build.make CMakeFiles/perf_harness.dir/tools/perf_harness.cpp.s
-.PHONY : tools/perf_harness.cpp.s
-
-tools/tcp_client.o: tools/tcp_client.cpp.o
-.PHONY : tools/tcp_client.o
-
-# target to build an object file
-tools/tcp_client.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_client.dir/build.make CMakeFiles/tcp_client.dir/tools/tcp_client.cpp.o
-.PHONY : tools/tcp_client.cpp.o
-
-tools/tcp_client.i: tools/tcp_client.cpp.i
-.PHONY : tools/tcp_client.i
-
-# target to preprocess a source file
-tools/tcp_client.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_client.dir/build.make CMakeFiles/tcp_client.dir/tools/tcp_client.cpp.i
-.PHONY : tools/tcp_client.cpp.i
-
-tools/tcp_client.s: tools/tcp_client.cpp.s
-.PHONY : tools/tcp_client.s
-
-# target to generate assembly for a file
-tools/tcp_client.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_client.dir/build.make CMakeFiles/tcp_client.dir/tools/tcp_client.cpp.s
-.PHONY : tools/tcp_client.cpp.s
-
-tools/udp_receiver.o: tools/udp_receiver.cpp.o
-.PHONY : tools/udp_receiver.o
-
-# target to build an object file
-tools/udp_receiver.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/udp_receiver.dir/build.make CMakeFiles/udp_receiver.dir/tools/udp_receiver.cpp.o
-.PHONY : tools/udp_receiver.cpp.o
-
-tools/udp_receiver.i: tools/udp_receiver.cpp.i
-.PHONY : tools/udp_receiver.i
-
-# target to preprocess a source file
-tools/udp_receiver.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/udp_receiver.dir/build.make CMakeFiles/udp_receiver.dir/tools/udp_receiver.cpp.i
-.PHONY : tools/udp_receiver.cpp.i
-
-tools/udp_receiver.s: tools/udp_receiver.cpp.s
-.PHONY : tools/udp_receiver.s
-
-# target to generate assembly for a file
-tools/udp_receiver.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/udp_receiver.dir/build.make CMakeFiles/udp_receiver.dir/tools/udp_receiver.cpp.s
-.PHONY : tools/udp_receiver.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1202,127 +421,30 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
-	@echo "... bench_exchange"
 	@echo "... bench_matching"
 	@echo "... bench_memory_pool"
-	@echo "... client_simulator"
-	@echo "... load_generator"
-	@echo "... perf_harness"
+	@echo "... gmock"
+	@echo "... gmock_main"
+	@echo "... gtest"
+	@echo "... gtest_main"
 	@echo "... rtes_core"
-	@echo "... tcp_client"
+	@echo "... rtes_tests"
 	@echo "... trading_exchange"
-	@echo "... udp_receiver"
-	@echo "... src/auth_middleware.o"
-	@echo "... src/auth_middleware.i"
-	@echo "... src/auth_middleware.s"
-	@echo "... src/client_base.o"
-	@echo "... src/client_base.i"
-	@echo "... src/client_base.s"
-	@echo "... src/config.o"
-	@echo "... src/config.i"
-	@echo "... src/config.s"
-	@echo "... src/dashboard.o"
-	@echo "... src/dashboard.i"
-	@echo "... src/dashboard.s"
-	@echo "... src/deployment_manager.o"
-	@echo "... src/deployment_manager.i"
-	@echo "... src/deployment_manager.s"
-	@echo "... src/error_handling.o"
-	@echo "... src/error_handling.i"
-	@echo "... src/error_handling.s"
-	@echo "... src/exchange.o"
-	@echo "... src/exchange.i"
-	@echo "... src/exchange.s"
-	@echo "... src/http_server.o"
-	@echo "... src/http_server.i"
-	@echo "... src/http_server.s"
-	@echo "... src/input_validation.o"
-	@echo "... src/input_validation.i"
-	@echo "... src/input_validation.s"
-	@echo "... src/logger.o"
-	@echo "... src/logger.i"
-	@echo "... src/logger.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/matching_engine.o"
-	@echo "... src/matching_engine.i"
-	@echo "... src/matching_engine.s"
-	@echo "... src/memory_safety.o"
-	@echo "... src/memory_safety.i"
-	@echo "... src/memory_safety.s"
-	@echo "... src/metrics.o"
-	@echo "... src/metrics.i"
-	@echo "... src/metrics.s"
-	@echo "... src/monitoring.o"
-	@echo "... src/monitoring.i"
-	@echo "... src/monitoring.s"
-	@echo "... src/network_security.o"
-	@echo "... src/network_security.i"
-	@echo "... src/network_security.s"
-	@echo "... src/observability.o"
-	@echo "... src/observability.i"
-	@echo "... src/observability.s"
 	@echo "... src/order_book.o"
 	@echo "... src/order_book.i"
 	@echo "... src/order_book.s"
-	@echo "... src/performance_optimizer.o"
-	@echo "... src/performance_optimizer.i"
-	@echo "... src/performance_optimizer.s"
-	@echo "... src/production_readiness.o"
-	@echo "... src/production_readiness.i"
-	@echo "... src/production_readiness.s"
-	@echo "... src/protocol.o"
-	@echo "... src/protocol.i"
-	@echo "... src/protocol.s"
-	@echo "... src/risk_manager.o"
-	@echo "... src/risk_manager.i"
-	@echo "... src/risk_manager.s"
-	@echo "... src/secure_config.o"
-	@echo "... src/secure_config.i"
-	@echo "... src/secure_config.s"
-	@echo "... src/security_utils.o"
-	@echo "... src/security_utils.i"
-	@echo "... src/security_utils.s"
-	@echo "... src/strategies.o"
-	@echo "... src/strategies.i"
-	@echo "... src/strategies.s"
-	@echo "... src/tcp_gateway.o"
-	@echo "... src/tcp_gateway.i"
-	@echo "... src/tcp_gateway.s"
-	@echo "... src/thread_safety.o"
-	@echo "... src/thread_safety.i"
-	@echo "... src/thread_safety.s"
-	@echo "... src/transaction.o"
-	@echo "... src/transaction.i"
-	@echo "... src/transaction.s"
-	@echo "... src/udp_publisher.o"
-	@echo "... src/udp_publisher.i"
-	@echo "... src/udp_publisher.s"
-	@echo "... tools/bench_exchange.o"
-	@echo "... tools/bench_exchange.i"
-	@echo "... tools/bench_exchange.s"
+	@echo "... tests/test_order_book.o"
+	@echo "... tests/test_order_book.i"
+	@echo "... tests/test_order_book.s"
 	@echo "... tools/bench_matching.o"
 	@echo "... tools/bench_matching.i"
 	@echo "... tools/bench_matching.s"
 	@echo "... tools/bench_memory_pool.o"
 	@echo "... tools/bench_memory_pool.i"
 	@echo "... tools/bench_memory_pool.s"
-	@echo "... tools/client_simulator.o"
-	@echo "... tools/client_simulator.i"
-	@echo "... tools/client_simulator.s"
-	@echo "... tools/load_generator.o"
-	@echo "... tools/load_generator.i"
-	@echo "... tools/load_generator.s"
-	@echo "... tools/perf_harness.o"
-	@echo "... tools/perf_harness.i"
-	@echo "... tools/perf_harness.s"
-	@echo "... tools/tcp_client.o"
-	@echo "... tools/tcp_client.i"
-	@echo "... tools/tcp_client.s"
-	@echo "... tools/udp_receiver.o"
-	@echo "... tools/udp_receiver.i"
-	@echo "... tools/udp_receiver.s"
 .PHONY : help
 
 

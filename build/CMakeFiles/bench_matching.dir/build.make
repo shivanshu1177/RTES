@@ -96,8 +96,6 @@ bench_matching_EXTERNAL_OBJECTS =
 bench_matching: CMakeFiles/bench_matching.dir/tools/bench_matching.cpp.o
 bench_matching: CMakeFiles/bench_matching.dir/build.make
 bench_matching: librtes_core.a
-bench_matching: /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libssl.dylib
-bench_matching: /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libcrypto.dylib
 bench_matching: CMakeFiles/bench_matching.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/shivanshu/projects/RTES/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable bench_matching"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/bench_matching.dir/link.txt --verbose=$(VERBOSE)

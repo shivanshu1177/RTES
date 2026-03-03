@@ -1,0 +1,5 @@
+if(EXISTS "/Users/shivanshu/projects/RTES/build/rtes_tests[1]_tests.cmake")
+  include("/Users/shivanshu/projects/RTES/build/rtes_tests[1]_tests.cmake")
+else()
+  add_test(rtes_tests_NOT_BUILT rtes_tests_NOT_BUILT)
+endif()

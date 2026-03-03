@@ -96,8 +96,6 @@ bench_memory_pool_EXTERNAL_OBJECTS =
 bench_memory_pool: CMakeFiles/bench_memory_pool.dir/tools/bench_memory_pool.cpp.o
 bench_memory_pool: CMakeFiles/bench_memory_pool.dir/build.make
 bench_memory_pool: librtes_core.a
-bench_memory_pool: /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libssl.dylib
-bench_memory_pool: /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libcrypto.dylib
 bench_memory_pool: CMakeFiles/bench_memory_pool.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/shivanshu/projects/RTES/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable bench_memory_pool"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/bench_memory_pool.dir/link.txt --verbose=$(VERBOSE)

@@ -96,8 +96,6 @@ trading_exchange_EXTERNAL_OBJECTS =
 trading_exchange: CMakeFiles/trading_exchange.dir/src/main.cpp.o
 trading_exchange: CMakeFiles/trading_exchange.dir/build.make
 trading_exchange: librtes_core.a
-trading_exchange: /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libssl.dylib
-trading_exchange: /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libcrypto.dylib
 trading_exchange: CMakeFiles/trading_exchange.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/shivanshu/projects/RTES/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable trading_exchange"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/trading_exchange.dir/link.txt --verbose=$(VERBOSE)

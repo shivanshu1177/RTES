@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -march=native -flto -DNDEBUG -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/udp_receiver.dir/tools/udp_receiver.cpp.o -o udp_receiver  librtes_core.a /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libssl.dylib /opt/homebrew/Cellar/openssl@3/3.6.0/lib/libcrypto.dylib
